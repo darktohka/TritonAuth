@@ -72,13 +72,13 @@ class AddOTPWidget(TritonWidget):
         self.boxLayout.addWidget(self.verifyButton, 0, Qt.AlignCenter)
         self.boxLayout.addSpacing(10)
         self.boxLayout.addWidget(self.addButton, 0, Qt.AlignRight)
-        
+
         self.setFixedSize(self.sizeHint())
         self.center()
         self.show()
 
     def getAccount(self):
-        return {'name': self.name, 'type': self.type, 'key': self.key}
+        return {'name': self.name, 'type': self.type, 'key': self.key, 'icon': 'icons/WinAuthIcon.png'}
 
     def invalidateSecret(self):
         self.key = None

@@ -15,6 +15,7 @@ class EntryWidget(TritonWidget):
         self.type = account['type']
         self.name = account['name']
         self.key = account['key']
+        self.icon = account['icon']
         self.timer = None
         self.secretWidget = None
 
@@ -82,7 +83,7 @@ class EntryWidget(TritonWidget):
         return self.base.getAuthCode(self.type, self.key)
 
     def getAccount(self):
-        return {'name': self.name, 'type': self.type, 'key': self.key}
+        return {'name': self.name, 'type': self.type, 'key': self.key, 'icon': self.icon}
 
     def widgetDeleted(self, *args):
         self.stopTimer()
