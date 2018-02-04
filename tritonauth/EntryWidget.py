@@ -10,13 +10,12 @@ import time
 
 class EntryWidget(TritonWidget):
 
-    def __init__(self, base, account, index):
+    def __init__(self, base, account):
         TritonWidget.__init__(self, base)
         self.account = account
         self.type = account['type']
         self.name = account['name']
         self.icon = account['icon']
-        self.index = index
         self.timer = None
         self.secretWidget = None
 
@@ -134,13 +133,11 @@ class EntryWidget(TritonWidget):
 
         if reply == QMessageBox.Yes:
             self.base.deleteAccount(self.account)
-    
-    def saveAccount(self):
-        self.base.setAccount(self.index, self.account)
-    
+
     def renameAccount(self, name):
+        index = self.base.getAccountIndex(self.account)
         self.account['name'] = name
-        self.base.setAccount(self.index, self.account)
+        self.base.setAccount(index, self.account)
 
     def showSecretKey(self):
         if self.type == Globals.OTPAuth:
