@@ -26,6 +26,12 @@ class MainWidget(TritonWidget):
         self.addMenu.addAction(self.authAction)
         self.addMenu.addAction(self.steamAction)
         
+        self.sortMenu = self.menu.addMenu('Sort')
+        self.nameAction = QAction('Sort by name', self)
+        self.nameAction.triggered.connect(self.sortByName)
+        
+        self.sortMenu.addAction(self.nameAction)
+        
         self.widget = QWidget()
         self.widget.setContentsMargins(10, 10, 10, 10)
 
@@ -35,9 +41,8 @@ class MainWidget(TritonWidget):
         self.scrollWidget = QWidget()
         self.scrollLayout = QVBoxLayout(self.scrollWidget)
         self.scrollLayout.setAlignment(Qt.AlignTop)
-
-        for account in self.base.getAccounts():
-            self.addAccount(account)
+        
+        self.createAccounts()
 
         self.scrollArea.setWidget(self.scrollWidget)
 
@@ -62,7 +67,7 @@ class MainWidget(TritonWidget):
             self.addOTP = None
 
     def addAccount(self, account):
-        entry = EntryWidget(self.base, account)
+        entry = EntryWidget(self.base, account, self.scrollLayout.count())
         self.scrollLayout.addWidget(entry)
 
     def deleteAccount(self, account):
@@ -71,6 +76,14 @@ class MainWidget(TritonWidget):
 
             if widget.account == account:
                 widget.close()
+    
+    def clearAccounts(self):
+        for i in range(self.scrollLayout.count()):
+            self.scrollLayout.itemAt(i).widget().close()
+    
+    def createAccounts(self):
+        for account in self.base.getAccounts():
+            self.addAccount(account)
 
     def openAddOTP(self):
         self.closeAddOTP()
@@ -79,3 +92,8 @@ class MainWidget(TritonWidget):
     def openAddSteam(self):
         self.closeAddOTP()
         self.addOTP = AddSteamWidget(self.base)
+    
+    def sortByName(self):
+        self.base.sortAccountsByName()
+        self.clearAccounts()
+        self.createAccounts()

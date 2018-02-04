@@ -40,3 +40,36 @@ class TextboxWidget(TritonWidget):
 
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.box)
+
+class EditableLabel(QLabel):
+
+    def __init__(self, *args, **kwargs):
+        QLabel.__init__(self, *args, **kwargs)
+        self.editor = QLineEdit(self)
+        self.editor.setWindowFlags(Qt.Popup)
+        self.editor.setFocusProxy(self)
+        self.editor.editingFinished.connect(self.handleEditingFinished)
+        self.editor.installEventFilter(self)
+        self.callback = lambda text: 0
+
+    def eventFilter(self, widget, event):
+        if ((event.type() == QEvent.MouseButtonPress and not self.editor.geometry().contains(event.globalPos())) or (event.type() == QEvent.KeyPress and event.key() == Qt.Key_Escape)):
+            self.editor.hide()
+            return True
+
+        return QLabel.eventFilter(self, widget, event)
+
+    def mouseDoubleClickEvent(self, event):
+        rect = self.rect()
+        self.editor.setFixedSize(rect.size())
+        self.editor.move(self.parent().mapToGlobal(rect.topLeft()))
+        self.editor.setText(self.text())
+
+        if not self.editor.isVisible():
+            self.editor.show()
+
+    def handleEditingFinished(self):
+        text = self.editor.text()
+        self.editor.hide()
+        self.setText(text)
+        self.callback(text)
