@@ -67,7 +67,7 @@ class MainWidget(TritonWidget):
             self.addOTP = None
 
     def addAccount(self, account):
-        entry = EntryWidget(self.base, account, self.scrollLayout.count())
+        entry = EntryWidget(self.base, account)
         self.scrollLayout.addWidget(entry)
 
     def deleteAccount(self, account):
