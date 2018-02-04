@@ -7,9 +7,9 @@ from PIL import Image
 from .Settings import Settings
 from .LoginWidget import LoginWidget
 from .MainWidget import MainWidget
-from . import AESCipher, Globals
+from . import AESCipher, Globals, SteamUtils
 import sys, json, re
-import pyotp, zbarlight
+import pyotp
 
 class TritonAuth(object):
 
@@ -21,9 +21,13 @@ class TritonAuth(object):
         self.key = ''
         self.data = {}
 
-    def getAuthCode(self, type, key):
+    def getAuthCode(self, account):
+        type = account.get('type', None)
+
         if type == Globals.OTPAuth:
-            return pyotp.TOTP(key).now()
+            return pyotp.TOTP(account['key']).now()
+        elif type == Globals.SteamAuth:
+            return SteamUtils.generateCode(account['sharedSecret'])
         else:
             return ''
 
@@ -39,7 +43,7 @@ class TritonAuth(object):
                 with urlopen(link) as file:
                     image = Image.open(file)
                     image.load()
-
+                return
                 for code in zbarlight.scan_codes('qrcode', image):
                     try:
                         return parse_qs(urlparse(code).query)[b'secret'][0].decode('utf-8')

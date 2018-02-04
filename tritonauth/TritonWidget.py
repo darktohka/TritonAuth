@@ -19,3 +19,24 @@ class TritonWidget(QWidget):
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
+
+class TextboxWidget(TritonWidget):
+
+    def __init__(self, base, name):
+        TritonWidget.__init__(self, base)
+        self.name = name
+        self.setBackgroundColor(self, Qt.white)
+
+        self.layout = QHBoxLayout(self)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+
+        self.label = QLabel()
+        self.label.setText(name)
+        self.label.setFont(QFont('SansSerif', 10))
+
+        self.box = QLineEdit()
+        self.box.setFixedWidth(250)
+        self.box.setFont(QFont('SansSerif', 10))
+
+        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.box)

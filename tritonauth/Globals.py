@@ -9,3 +9,4 @@ ErrorMessages = {
 DefaultErrorMessage = 'Unknown error'
 
 OTPAuth = 0
+SteamAuth = 1

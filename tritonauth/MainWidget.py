@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from .TritonWidget import TritonWidget
 from .EntryWidget import EntryWidget
 from .AddOTPWidget import AddOTPWidget
+from .AddSteamWidget import AddSteamWidget
 
 class MainWidget(TritonWidget):
 
@@ -20,6 +21,7 @@ class MainWidget(TritonWidget):
         self.authAction = QAction('Authenticator', self)
         self.authAction.triggered.connect(self.openAddOTP)
         self.steamAction = QAction('Steam', self)
+        self.steamAction.triggered.connect(self.openAddSteam)
 
         self.addMenu.addAction(self.authAction)
         self.addMenu.addAction(self.steamAction)
@@ -67,9 +69,13 @@ class MainWidget(TritonWidget):
         for i in range(self.scrollLayout.count()):
             widget = self.scrollLayout.itemAt(i).widget()
 
-            if widget.getAccount() == account:
+            if widget.account == account:
                 widget.close()
 
     def openAddOTP(self):
         self.closeAddOTP()
         self.addOTP = AddOTPWidget(self.base)
+
+    def openAddSteam(self):
+        self.closeAddOTP()
+        self.addOTP = AddSteamWidget(self.base)

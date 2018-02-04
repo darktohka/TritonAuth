@@ -4,29 +4,25 @@ from PyQt5.QtWidgets import *
 from .TritonWidget import TritonWidget, TextboxWidget
 from . import Globals
 
-class AddOTPWidget(TritonWidget):
+class AddSteamWidget(TritonWidget):
 
     def __init__(self, base, *args, **kwargs):
         TritonWidget.__init__(self, base, *args, **kwargs)
-        self.key = None
-        self.type = Globals.OTPAuth
+        self.sharedSecret = None
+        self.identitySecret = None
+        self.steamId = None
+        self.type = Globals.SteamAuth
 
-        self.setWindowTitle('Add Authenticator')
+        self.setWindowTitle('Add Steam')
         self.setBackgroundColor(self, Qt.white)
 
         self.boxLayout = QVBoxLayout(self)
         self.boxLayout.setContentsMargins(20, 20, 20, 20)
 
         self.nameWidget = TextboxWidget(base, 'Name:')
-
-        self.secretLabel = QLabel()
-        self.secretLabel.setText('Enter the Secret Code. If you have a QR code,\nyou can paste the URL of the image instead.')
-        self.secretLabel.setFont(QFont('SansSerif', 10))
-
-        self.secretBox = QLineEdit()
-        self.secretBox.setFixedWidth(300)
-        self.secretBox.setFont(QFont('SansSerif', 10))
-        self.secretBox.textChanged.connect(lambda text: self.invalidateSecret())
+        self.steamIdWidget = TextboxWidget(base, 'Steam ID:')
+        self.sharedWidget = TextboxWidget(base, 'Shared Secret:')
+        self.identityWidget = TextboxWidget(base, 'Identity Secret:')
 
         self.verifyLabel = QLabel()
         self.verifyLabel.setText('Click the Verify button to check the first code.')
@@ -50,9 +46,9 @@ class AddOTPWidget(TritonWidget):
         self.addButton.clicked.connect(self.add)
 
         self.boxLayout.addWidget(self.nameWidget)
-        self.boxLayout.addSpacing(10)
-        self.boxLayout.addWidget(self.secretLabel)
-        self.boxLayout.addWidget(self.secretBox)
+        self.boxLayout.addWidget(self.steamIdWidget)
+        self.boxLayout.addWidget(self.sharedWidget)
+        self.boxLayout.addWidget(self.identityWidget)
         self.boxLayout.addSpacing(10)
         self.boxLayout.addWidget(self.verifyLabel)
         self.boxLayout.addWidget(self.verifyBox, 0, Qt.AlignCenter)
@@ -68,21 +64,22 @@ class AddOTPWidget(TritonWidget):
         return self.nameWidget.box.text()
 
     def getAccount(self):
-        return {'name': self.getName(), 'type': self.type, 'key': self.key, 'icon': 'icons/WinAuthIcon.png'}
+        return {'name': self.getName(), 'type': self.type, 'sharedSecret': self.sharedSecret, 'identitySecret': self.identitySecret, 'steamId': self.steamId, 'icon': 'icons/SteamIcon.png'}
 
-    def invalidateSecret(self, value=''):
-        self.key = None
-        self.verifyBox.setText(value)
+    def invalidateSecret(self, text=''):
+        self.sharedSecret = None
+        self.identitySecret = None
+        self.steamId = None
+        self.verifyBox.setText(text)
 
     def checkVerify(self):
-        self.key = self.secretBox.text()
+        self.sharedSecret = self.sharedWidget.box.text()
+        self.identitySecret = self.identityWidget.box.text()
+        self.steamId = self.steamIdWidget.box.text()
 
-        if not self.key:
+        if not self.sharedSecret or not self.identitySecret or not self.steamId:
             self.invalidateSecret('Invalid')
             return
-
-        self.key = self.base.readQRLink(self.key) or self.key
-        self.key = self.key.upper().replace(' ', '')
 
         try:
             self.verifyBox.setText(self.base.getAuthCode(self.getAccount()))
@@ -90,7 +87,7 @@ class AddOTPWidget(TritonWidget):
             self.invalidateSecret('Invalid')
 
     def add(self):
-        if not self.key or not self.getName():
+        if not self.sharedSecret or not self.getName():
             return
 
         self.base.addAccount(self.getAccount())

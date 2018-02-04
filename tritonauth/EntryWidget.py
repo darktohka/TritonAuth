@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from .TritonWidget import TritonWidget
 from .PixmapButton import PixmapButton
 from .ShowSecretWidget import ShowSecretWidget
+from . import Globals
 from qroundprogressbar import QRoundProgressBar
 import time
 
@@ -14,7 +15,6 @@ class EntryWidget(TritonWidget):
         self.account = account
         self.type = account['type']
         self.name = account['name']
-        self.key = account['key']
         self.icon = account['icon']
         self.timer = None
         self.secretWidget = None
@@ -25,7 +25,7 @@ class EntryWidget(TritonWidget):
         self.boxLayout.setContentsMargins(0, 0, 0, 0)
 
         self.image = QLabel()
-        pixmap = QPixmap('icons/WinAuthIcon.png').scaled(48, 48)
+        pixmap = QPixmap(self.icon).scaled(48, 48)
         self.image.setPixmap(pixmap)
         self.image.setFixedSize(48, 48)
 
@@ -80,20 +80,15 @@ class EntryWidget(TritonWidget):
         self.menu.addAction(self.showAction)
 
     def getValue(self):
-        return self.base.getAuthCode(self.type, self.key)
-
-    def getAccount(self):
-        return {'name': self.name, 'type': self.type, 'key': self.key, 'icon': self.icon}
+        return self.base.getAuthCode(self.account)
 
     def widgetDeleted(self, *args):
         self.stopTimer()
         self.name = None
-        self.key = None
+        self.account = None
 
     def buttonPressed(self, *args):
-        if self.timer:
-            self.hidePassword()
-        else:
+        if not self.timer:
             self.showPassword()
 
     def openContextMenu(self, point):
@@ -136,7 +131,20 @@ class EntryWidget(TritonWidget):
         reply = QMessageBox.question(self, self.name, 'ATTENTION! Deleting this account is an irreversible action!\n\nAre you absolutely sure?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
-            self.base.deleteAccount(self.getAccount())
+            self.base.deleteAccount(self.account)
 
     def showSecretKey(self):
-        self.secretWidget = ShowSecretWidget(self.base, self.key, self.name)
+        if self.type == Globals.OTPAuth:
+            keys = [
+                ('Key', self.account['key'])
+            ]
+        elif self.type == Globals.SteamAuth:
+            keys = [
+                ('Steam ID', self.account['steamId']),
+                ('Shared Secret', self.account['sharedSecret']),
+                ('Identity Secret', self.account['identitySecret'])
+            ]
+        else:
+            keys = []
+
+        self.secretWidget = ShowSecretWidget(self.base, keys, self.name)
