@@ -5,6 +5,8 @@ from .TritonWidget import TritonWidget
 from .EntryWidget import EntryWidget
 from .AddOTPWidget import AddOTPWidget
 from .AddSteamWidget import AddSteamWidget
+from . import Globals
+import base64, json
 
 class MainWidget(TritonWidget):
 
@@ -31,6 +33,12 @@ class MainWidget(TritonWidget):
         self.nameAction.triggered.connect(self.sortByName)
         
         self.sortMenu.addAction(self.nameAction)
+
+        self.exportMenu = self.menu.addMenu('Export')
+        self.andOTPAction = QAction('Export to andOTP', self)
+        self.andOTPAction.triggered.connect(self.exportToAndOTP)
+        
+        self.exportMenu.addAction(self.andOTPAction)
         
         self.widget = QWidget()
         self.widget.setContentsMargins(10, 10, 10, 10)
@@ -97,3 +105,21 @@ class MainWidget(TritonWidget):
         self.base.sortAccountsByName()
         self.clearAccounts()
         self.createAccounts()
+    
+    def exportToAndOTP(self):
+        accounts = []
+        
+        for account in self.base.getAccounts():
+            type = account['type']
+            
+            if type == Globals.OTPAuth:
+                accounts.append({'secret': account['key'], 'digits': 6, 'period': 30, 'label': account['name'], 'type': 'TOTP', 'algorithm': 'SHA1', 'thumbnail': 'Default', 'last_used': 0, 'tags': []})
+            elif type == Globals.SteamAuth:
+                accounts.append({'secret': base64.b32encode(base64.b64decode(account['sharedSecret'])).decode('utf-8'), 'digits': 5, 'period': 30, 'label': account['name'], 'type': 'STEAM', 'algorithm': 'SHA1', 'thumbnail': 'Default', 'last_used': 0, 'tags': []})
+        
+        accounts = json.dumps(accounts)
+        filename, _ = QFileDialog.getSaveFileName(self, 'Export to andOTP JSON file', '', 'All Files (*)')
+        
+        if filename:
+            with open(filename, 'w') as file:
+                file.write(accounts)
