@@ -1,5 +1,4 @@
-pycrypto
+PyCryptoDome
 PyQt5
 Pillow
 qroundprogressbar
-zbarlight
