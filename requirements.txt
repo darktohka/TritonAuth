@@ -1,3 +1,5 @@
+wheel
+pyotp
 PyCryptoDome
 PyQt5
 Pillow
