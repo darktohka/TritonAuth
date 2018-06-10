@@ -100,6 +100,9 @@ class TritonAuth(object):
 
     def getAccountIndex(self, account):
         return self.data['accounts'].index(account)
+    
+    def getAccount(self, index):
+        return self.data['accounts'][index]
 
     def startLogin(self):
         self.stopLogin()

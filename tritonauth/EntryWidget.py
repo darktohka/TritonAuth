@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import *
 from .TritonWidget import TritonWidget, EditableLabel
 from .PixmapButton import PixmapButton
 from .ShowSecretWidget import ShowSecretWidget
+from .EditIconWidget import EditIconWidget
 from . import Globals
 from qroundprogressbar import QRoundProgressBar
 import time
@@ -18,6 +19,7 @@ class EntryWidget(TritonWidget):
         self.icon = account['icon']
         self.timer = None
         self.secretWidget = None
+        self.iconWidget = None
 
         self.closeEvent = self.widgetDeleted
 
@@ -25,9 +27,8 @@ class EntryWidget(TritonWidget):
         self.boxLayout.setContentsMargins(0, 0, 0, 0)
 
         self.image = QLabel()
-        pixmap = QPixmap(self.icon).scaled(48, 48)
-        self.image.setPixmap(pixmap)
         self.image.setFixedSize(48, 48)
+        self.reloadIcon()
 
         self.detailWidget = QWidget()
         self.detailLayout = QVBoxLayout(self.detailWidget)
@@ -74,10 +75,13 @@ class EntryWidget(TritonWidget):
         self.menu = QMenu(self)
         self.removeAction = QAction('Remove')
         self.removeAction.triggered.connect(self.removeAccount)
+        self.iconAction = QAction('Edit icon')
+        self.iconAction.triggered.connect(self.editIcon)
         self.showAction = QAction('Show secret key')
         self.showAction.triggered.connect(self.showSecretKey)
         self.menu.addAction(self.removeAction)
         self.menu.addSeparator()
+        self.menu.addAction(self.iconAction)
         self.menu.addAction(self.showAction)
 
     def getValue(self):
@@ -94,6 +98,10 @@ class EntryWidget(TritonWidget):
 
     def openContextMenu(self, point):
         self.menu.exec_(self.mapToGlobal(point))
+
+    def reloadIcon(self):
+        pixmap = QPixmap(self.icon).scaled(48, 48)
+        self.image.setPixmap(pixmap)
 
     def stopTimer(self):
         if self.timer:
@@ -138,6 +146,16 @@ class EntryWidget(TritonWidget):
         index = self.base.getAccountIndex(self.account)
         self.account['name'] = name
         self.base.setAccount(index, self.account)
+    
+    def editIcon(self):
+        self.iconWidget = EditIconWidget(self.base, self.name, self.editIconCallback)
+    
+    def editIconCallback(self, icon):
+        index = self.base.getAccountIndex(self.account)
+        self.icon = icon
+        self.account['icon'] = icon
+        self.base.setAccount(index, self.account)
+        self.reloadIcon()
 
     def showSecretKey(self):
         if self.type == Globals.OTPAuth:
