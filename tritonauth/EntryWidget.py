@@ -34,13 +34,14 @@ class EntryWidget(TritonWidget):
         self.detailLayout = QVBoxLayout(self.detailWidget)
         self.detailLayout.setContentsMargins(0, 0, 0, 0)
 
-        self.nameLabel = EditableLabel()
+        self.nameLabel = EditableLabel(True)
         self.nameLabel.callback = self.renameAccount
         self.nameLabel.setText(self.name)
         self.nameLabel.setAlignment(Qt.AlignTop)
         self.nameLabel.setFont(QFont('SansSerif', 11))
 
-        self.passLabel = QLabel()
+        self.passLabel = EditableLabel(False)
+        self.passLabel.disableEdit()
         self.passLabel.setAlignment(Qt.AlignBottom)
 
         self.detailLayout.addWidget(self.nameLabel)
@@ -112,12 +113,14 @@ class EntryWidget(TritonWidget):
         self.stopTimer()
         self.passLabel.setText('* ' * 5)
         self.passLabel.setFont(QFont('SansSerif', 9, weight=QFont.Bold))
+        self.passLabel.disableEdit()
         self.showButton.show()
         self.timerProgress.hide()
 
     def showPassword(self):
         self.passLabel.setText(self.getValue())
         self.passLabel.setFont(QFont('SansSerif', 12, weight=QFont.Bold))
+        self.passLabel.enableEdit()
         self.showButton.hide()
         self.timerProgress.show()
         self.timerEnd = time.time() + 15
