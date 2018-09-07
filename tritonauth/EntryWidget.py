@@ -16,7 +16,7 @@ class EntryWidget(TritonWidget):
         self.account = account
         self.type = account['type']
         self.name = account['name']
-        self.icon = account['icon']
+        self.icon = account['icon'].replace('\\', '/')
         self.timer = None
         self.secretWidget = None
         self.iconWidget = None
@@ -152,7 +152,7 @@ class EntryWidget(TritonWidget):
     
     def editIconCallback(self, icon):
         index = self.base.getAccountIndex(self.account)
-        self.icon = icon
+        self.icon = icon.replace('\\', '/')
         self.account['icon'] = icon
         self.base.setAccount(index, self.account)
         self.reloadIcon()
