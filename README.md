@@ -7,6 +7,6 @@ A minimalistic rewrite of WinAuth entirely in Python.
 It's easy to get started:
 
 ```
-pip3 install -r requirements.py
+python3 -m pip install -r requirements.py
 sh start.sh
 ```
