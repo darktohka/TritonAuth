@@ -80,6 +80,8 @@ class EditableLabel(QLabel):
         self.editor.setFixedSize(rect.size())
         self.editor.move(self.mapToGlobal(rect.topLeft()))
         self.editor.setText(self.text())
+        self.editor.setFocus(True)
+        self.editor.selectAll()
 
         if not self.editor.isVisible():
             self.editor.show()
