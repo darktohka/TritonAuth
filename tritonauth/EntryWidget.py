@@ -34,13 +34,13 @@ class EntryWidget(TritonWidget):
         self.detailLayout = QVBoxLayout(self.detailWidget)
         self.detailLayout.setContentsMargins(0, 0, 0, 0)
 
-        self.nameLabel = EditableLabel(True)
+        self.nameLabel = EditableLabel(True, None)
         self.nameLabel.callback = self.renameAccount
         self.nameLabel.setText(self.name)
         self.nameLabel.setAlignment(Qt.AlignTop)
         self.nameLabel.setFont(QFont('SansSerif', 11))
 
-        self.passLabel = EditableLabel(False)
+        self.passLabel = EditableLabel(False, self.openPassLabel)
         self.passLabel.disableEdit()
         self.passLabel.setAlignment(Qt.AlignBottom)
 
@@ -96,6 +96,10 @@ class EntryWidget(TritonWidget):
     def buttonPressed(self, *args):
         if not self.timer:
             self.showPassword()
+    
+    def openPassLabel(self, *args):
+        self.buttonPressed()
+        self.passLabel.mouseDoubleClickEvent()
 
     def openContextMenu(self, point):
         self.menu.exec_(self.mapToGlobal(point))

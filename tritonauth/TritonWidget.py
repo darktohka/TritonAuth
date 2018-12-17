@@ -43,10 +43,11 @@ class TextboxWidget(TritonWidget):
 
 class EditableLabel(QLabel):
 
-    def __init__(self, save, *args, **kwargs):
+    def __init__(self, save, failCallback, *args, **kwargs):
         QLabel.__init__(self, *args, **kwargs)
         self.save = save
         self.editable = True
+        self.failCallback = failCallback
         self.editor = QLineEdit(self)
         self.editor.setWindowFlags(Qt.Popup)
         self.editor.setFocusProxy(self)
@@ -68,8 +69,11 @@ class EditableLabel(QLabel):
     def enableEdit(self):
         self.editable = True
 
-    def mouseDoubleClickEvent(self, event):
+    def mouseDoubleClickEvent(self, event=None):
         if not self.editable:
+            if self.failCallback:
+                self.failCallback()
+
             return
 
         rect = self.rect()
