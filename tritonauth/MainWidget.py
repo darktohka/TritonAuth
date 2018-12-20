@@ -65,6 +65,19 @@ class MainWidget(TritonWidget):
         self.setFixedSize(self.sizeHint())
         self.center()
         self.show()
+    
+    def keyPressEvent(self, event):
+        if type(event) != QKeyEvent:
+            return
+
+        letter = event.text().strip().lower()
+
+        for i in range(self.scrollLayout.count()):
+            widget = self.scrollLayout.itemAt(i).widget()
+            
+            if widget.name[0].lower() == letter:
+                self.scrollArea.verticalScrollBar().setValue(widget.geometry().top())
+                return
 
     def widgetDeleted(self, arg):
         self.closeAddOTP()
