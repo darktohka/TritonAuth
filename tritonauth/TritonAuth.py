@@ -1,6 +1,4 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QApplication, QMessageBox
 from urllib.parse import urlparse, parse_qs
 from urllib.request import urlopen
 from PIL import Image

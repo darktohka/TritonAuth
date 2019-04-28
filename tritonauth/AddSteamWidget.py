@@ -1,6 +1,6 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPalette, QFont
+from PyQt5.QtWidgets import QVBoxLayout, QLabel, QLineEdit, QPushButton
 from .TritonWidget import TritonWidget, TextboxWidget
 from . import Globals
 

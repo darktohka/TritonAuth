@@ -1,6 +1,6 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QPalette, QFont, QPixmap, QBrush, QColor
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget, QLabel, QMenu, QAction, QMessageBox
 from .TritonWidget import TritonWidget, EditableLabel
 from .PixmapButton import PixmapButton
 from .ShowSecretWidget import ShowSecretWidget

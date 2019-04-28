@@ -1,6 +1,6 @@
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 from .TritonWidget import TritonWidget
 from .PixmapButton import PixmapButton
 import os
