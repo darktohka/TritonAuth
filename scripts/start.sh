@@ -1,2 +1,2 @@
 cd ..
-python3 -OO start.py
+python3 -OO main.py
