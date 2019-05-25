@@ -1,12 +1,15 @@
 from PyQt5.QtCore import Qt, QEvent
-from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QFont, QIcon
 from PyQt5.QtWidgets import QDesktopWidget, QWidget, QLabel, QLineEdit, QHBoxLayout
+import os
 
 class TritonWidget(QWidget):
 
     def __init__(self, base, *args, **kwargs):
         QWidget.__init__(self, *args, **kwargs)
         self.base = base
+
+        self.setWindowIcon(QIcon(os.path.join('icons', 'RefreshIconWithLock.png')))
 
     def setBackgroundColor(self, widget, color):
         widget.setAutoFillBackground(True)
