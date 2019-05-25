@@ -1,0 +1,9 @@
+*.py[c|o]
+__pycache__
+
+build
+dist
+
+tritonauth_setup.exe
+
+user.json

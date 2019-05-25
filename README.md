@@ -8,5 +8,6 @@ It's easy to get started:
 
 ```
 python3 -m pip install -r requirements.py
+cd scripts
 sh start.sh
 ```
