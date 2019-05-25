@@ -85,6 +85,7 @@ AccessControl::GrantOnFile "$INSTDIR" "(S-1-1-0)" "ListDirectory + GenericRead +
 AccessControl::EnableFileInheritance "$INSTDIR"
 File "dist\TritonAuth.exe"
 File "icon.ico"
+File /r "..\icons"
 CreateShortCut "$DESKTOP\TritonAuth.lnk" "$INSTDIR\TritonAuth.exe" "" "$INSTDIR\icon.ico" 0
 
 WriteUninstaller "$INSTDIR\uninstall.exe"
