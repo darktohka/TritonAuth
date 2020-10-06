@@ -8,7 +8,7 @@
 !define APP_NAME "TritonAuth"
 !define COMP_NAME "Dániel Derzsi"
 !define WEB_SITE "https://tohka.us"
-!define VERSION "1.1"
+!define VERSION "1.1.0.0"
 !define COPYRIGHT "© Dániel Derzsi 2020"
 !define DESCRIPTION "TritonAuth"
 !define INSTALLER_NAME "tritonauth_setup.exe"
