@@ -27,19 +27,19 @@ class MainWidget(TritonWidget):
 
         self.addMenu.addAction(self.authAction)
         self.addMenu.addAction(self.steamAction)
-        
+
         self.sortMenu = self.menu.addMenu('Sort')
         self.nameAction = QAction('Sort by name', self)
         self.nameAction.triggered.connect(self.sortByName)
-        
+
         self.sortMenu.addAction(self.nameAction)
 
         self.exportMenu = self.menu.addMenu('Export')
         self.andOTPAction = QAction('Export to andOTP', self)
         self.andOTPAction.triggered.connect(self.exportToAndOTP)
-        
+
         self.exportMenu.addAction(self.andOTPAction)
-        
+
         self.widget = QWidget()
         self.widget.setContentsMargins(10, 10, 10, 10)
 
@@ -49,7 +49,7 @@ class MainWidget(TritonWidget):
         self.scrollWidget = QWidget()
         self.scrollLayout = QVBoxLayout(self.scrollWidget)
         self.scrollLayout.setAlignment(Qt.AlignTop)
-        
+
         self.createAccounts()
 
         self.scrollArea.setWidget(self.scrollWidget)
@@ -61,11 +61,11 @@ class MainWidget(TritonWidget):
         self.boxLayout.setContentsMargins(0, 5, 0, 0)
         self.boxLayout.addWidget(self.menu)
         self.boxLayout.addWidget(self.widget)
-        
+
         self.setFixedSize(self.sizeHint())
         self.center()
         self.show()
-    
+
     def keyPressEvent(self, event):
         if type(event) != QKeyEvent:
             return
@@ -74,8 +74,8 @@ class MainWidget(TritonWidget):
 
         for i in range(self.scrollLayout.count()):
             widget = self.scrollLayout.itemAt(i).widget()
-            
-            if widget.name[0].lower() == letter:
+
+            if widget is not None and widget.name[0].lower() == letter:
                 self.scrollArea.verticalScrollBar().setValue(widget.geometry().top())
                 return
 
@@ -97,11 +97,11 @@ class MainWidget(TritonWidget):
 
             if widget.account == account:
                 widget.close()
-    
+
     def clearAccounts(self):
         for i in range(self.scrollLayout.count()):
             self.scrollLayout.itemAt(i).widget().close()
-    
+
     def createAccounts(self):
         for account in self.base.getAccounts():
             self.addAccount(account)
@@ -113,26 +113,26 @@ class MainWidget(TritonWidget):
     def openAddSteam(self):
         self.closeAddOTP()
         self.addOTP = AddSteamWidget(self.base)
-    
+
     def sortByName(self):
         self.base.sortAccountsByName()
         self.clearAccounts()
         self.createAccounts()
-    
+
     def exportToAndOTP(self):
         accounts = []
-        
+
         for account in self.base.getAccounts():
             type = account['type']
-            
+
             if type == Globals.OTPAuth:
                 accounts.append({'secret': account['key'], 'digits': 6, 'period': 30, 'label': account['name'], 'type': 'TOTP', 'algorithm': 'SHA1', 'thumbnail': 'Default', 'last_used': 0, 'tags': []})
             elif type == Globals.SteamAuth:
                 accounts.append({'secret': base64.b32encode(base64.b64decode(account['sharedSecret'])).decode('utf-8'), 'digits': 5, 'period': 30, 'label': account['name'], 'type': 'STEAM', 'algorithm': 'SHA1', 'thumbnail': 'Default', 'last_used': 0, 'tags': []})
-        
+
         accounts = json.dumps(accounts)
         filename, _ = QFileDialog.getSaveFileName(self, 'Export to andOTP JSON file', '', 'All Files (*)')
-        
+
         if filename:
             with open(filename, 'w') as file:
                 file.write(accounts)

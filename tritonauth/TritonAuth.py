@@ -71,7 +71,7 @@ class TritonAuth(object):
 
     def getAccounts(self):
         return self.data['accounts']
-    
+
     def sortAccountsByName(self):
         self.data['accounts'].sort(key=lambda acc: acc['name'])
         self.saveData()
@@ -91,14 +91,14 @@ class TritonAuth(object):
 
             if removeMain and self.main:
                 self.main.deleteAccount(account)
-    
+
     def setAccount(self, index, account):
         self.data['accounts'][index] = account
         self.saveData()
 
     def getAccountIndex(self, account):
         return self.data['accounts'].index(account)
-    
+
     def getAccount(self, index):
         return self.data['accounts'][index]
 

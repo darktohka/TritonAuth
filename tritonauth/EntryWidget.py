@@ -38,7 +38,7 @@ class EntryWidget(TritonWidget):
         self.nameLabel.callback = self.renameAccount
         self.nameLabel.setText(self.name)
         self.nameLabel.setAlignment(Qt.AlignTop)
-        self.nameLabel.setFont(QFont('SansSerif', 11))
+        self.nameLabel.setFont(QFont('Helvetica', 11))
 
         self.passLabel = EditableLabel(False, self.openPassLabel)
         self.passLabel.disableEdit()
@@ -96,7 +96,7 @@ class EntryWidget(TritonWidget):
     def buttonPressed(self, *args):
         if not self.timer:
             self.showPassword()
-    
+
     def openPassLabel(self, *args):
         self.buttonPressed()
         self.passLabel.mouseDoubleClickEvent()
@@ -114,16 +114,22 @@ class EntryWidget(TritonWidget):
             self.timer = None
 
     def hidePassword(self):
+        font = QFont('Helvetica', 10, weight=QFont.Bold)
+        font.setLetterSpacing(QFont.PercentageSpacing, 110)
+
         self.stopTimer()
         self.passLabel.setText('* ' * 5)
-        self.passLabel.setFont(QFont('SansSerif', 9, weight=QFont.Bold))
+        self.passLabel.setFont(font)
         self.passLabel.disableEdit()
         self.showButton.show()
         self.timerProgress.hide()
 
     def showPassword(self):
+        font = QFont('Helvetica', 13, weight=QFont.Bold)
+        font.setLetterSpacing(QFont.PercentageSpacing, 110)
+
         self.passLabel.setText(self.getValue())
-        self.passLabel.setFont(QFont('SansSerif', 12, weight=QFont.Bold))
+        self.passLabel.setFont(font)
         self.passLabel.enableEdit()
         self.showButton.hide()
         self.timerProgress.show()
@@ -153,10 +159,10 @@ class EntryWidget(TritonWidget):
         index = self.base.getAccountIndex(self.account)
         self.account['name'] = name
         self.base.setAccount(index, self.account)
-    
+
     def editIcon(self):
         self.iconWidget = EditIconWidget(self.base, self.name, self.editIconCallback)
-    
+
     def editIconCallback(self, icon):
         index = self.base.getAccountIndex(self.account)
         self.icon = icon.replace('\\', '/')

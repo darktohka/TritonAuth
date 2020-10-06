@@ -26,11 +26,11 @@ class AddSteamWidget(TritonWidget):
 
         self.verifyLabel = QLabel()
         self.verifyLabel.setText('Click the Verify button to check the first code.')
-        self.verifyLabel.setFont(QFont('SansSerif', 10))
+        self.verifyLabel.setFont(QFont('Helvetica', 10))
 
         self.verifyBox = QLineEdit()
         self.verifyBox.setFixedWidth(150)
-        self.verifyBox.setFont(QFont('SansSerif', 10))
+        self.verifyBox.setFont(QFont('Helvetica', 10))
         self.verifyBox.setEnabled(False)
 
         palette = QPalette()

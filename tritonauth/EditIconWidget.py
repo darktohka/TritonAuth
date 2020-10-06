@@ -17,7 +17,7 @@ class EditIconWidget(TritonWidget):
         self.boxLayout = QVBoxLayout(self)
         self.boxLayout.setContentsMargins(0, 5, 0, 0)
         layout = None
-        
+
         for i, icon in enumerate(os.listdir('icons')):
             if (not layout) or i % 10 == 0:
                 widget = QWidget()

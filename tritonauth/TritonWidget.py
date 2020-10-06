@@ -35,11 +35,11 @@ class TextboxWidget(TritonWidget):
 
         self.label = QLabel()
         self.label.setText(name)
-        self.label.setFont(QFont('SansSerif', 10))
+        self.label.setFont(QFont('Helvetica', 10))
 
         self.box = QLineEdit()
         self.box.setFixedWidth(250)
-        self.box.setFont(QFont('SansSerif', 10))
+        self.box.setFont(QFont('Helvetica', 10))
 
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.box)

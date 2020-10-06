@@ -1,15 +1,15 @@
 ############################################################################################
 #      NSIS Installation Script created by NSIS Quick Setup Script Generator v1.09.18
-#               Entirely Edited with NullSoft Scriptable Installation System                
-#              by Vlasis K. Barkas aka Red Wine red_wine@freemail.gr Sep 2006               
+#               Entirely Edited with NullSoft Scriptable Installation System
+#              by Vlasis K. Barkas aka Red Wine red_wine@freemail.gr Sep 2006
 ############################################################################################
 !addplugindir "${NSISDIR}\Plugins"
 
 !define APP_NAME "TritonAuth"
-!define COMP_NAME "Dániel Derzsi"
+!define COMP_NAME "DÃ¡niel Derzsi"
 !define WEB_SITE "https://tohka.us"
-!define VERSION "10.00.00.00"
-!define COPYRIGHT "© Dániel Derzsi 2020"
+!define VERSION "1.1"
+!define COPYRIGHT "Â© DÃ¡niel Derzsi 2020"
 !define DESCRIPTION "TritonAuth"
 !define INSTALLER_NAME "tritonauth_setup.exe"
 !define MAIN_APP_EXE "tritonauth_setup.exe"
@@ -81,7 +81,7 @@ Section -MainProgram
 ${INSTALL_TYPE}
 SetOverwrite ifnewer
 SetOutPath "$INSTDIR"
-AccessControl::GrantOnFile "$INSTDIR" "(S-1-1-0)" "ListDirectory + GenericRead + GenericExecute + GenericWrite" 
+AccessControl::GrantOnFile "$INSTDIR" "(S-1-1-0)" "ListDirectory + GenericRead + GenericExecute + GenericWrite"
 AccessControl::EnableFileInheritance "$INSTDIR"
 File "dist\TritonAuth.exe"
 File "icon.ico"
@@ -122,4 +122,3 @@ DeleteRegKey ${REG_ROOT} "${UNINSTALL_PATH}"
 SectionEnd
 
 ######################################################################
-
