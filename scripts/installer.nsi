@@ -9,7 +9,7 @@
 !define COMP_NAME "Dániel Derzsi"
 !define WEB_SITE "https://tohka.us"
 !define VERSION "10.00.00.00"
-!define COPYRIGHT "© Dániel Derzsi 2019"
+!define COPYRIGHT "© Dániel Derzsi 2020"
 !define DESCRIPTION "TritonAuth"
 !define INSTALLER_NAME "tritonauth_setup.exe"
 !define MAIN_APP_EXE "tritonauth_setup.exe"
@@ -98,7 +98,6 @@ WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "DisplayVersion" "${VERSION}"
 WriteRegStr ${REG_ROOT} "${UNINSTALL_PATH}"  "Publisher" "${COMP_NAME}"
 
 ExecShell "" "$InstDir\TritonAuth.exe"
-Delete "$INSTDIR\ods_setup_work.exe"
 Quit
 SectionEnd
 
