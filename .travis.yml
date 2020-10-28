@@ -7,7 +7,7 @@ jobs:
       language: shell
       env:
         - PYTHON_BIN=python
-        - PATH=/c/Python38:/c/Python38/Scripts:$PATH
+        - PATH=/c/Python39:/c/Python39/Scripts:$PATH
       before_install:
         - echo $SIGN_WIN_CERT | base64 --decode > cert.pfx
         - powershell //C "\$Password = ConvertTo-SecureString $SIGN_WIN_PASS -AsPlainText -Force; echo \$Password; Import-PfxCertificate -FilePath cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password \$Password"
