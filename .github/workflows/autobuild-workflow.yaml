@@ -11,8 +11,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Setup Visual Studio
-        uses: microsoft/setup-msbuild@v1.0.2
-      - name: Set up Python
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'
@@ -27,16 +27,15 @@ jobs:
         with:
           url: https://nsis.sourceforge.io/mediawiki/images/4/4a/AccessControl.zip
           target: "C:/Program Files (x86)/NSIS"
-      - name: Install NSIS plugins
+      - name: Install AccessControl
         shell: bash
         working-directory: "C:/Program Files (x86)/NSIS"
         run: >
           unzip -qq AccessControl.zip &&
           rm AccessControl.zip
-      - name: Install requirements
+      - name: Install Python requirements
         shell: bash
         run: >
-          python -m pip install --upgrade pip setuptools wheel &&
           python -m pip install --upgrade requests pyinstaller &&
           python -m pip install -r requirements.txt
       - name: Build executable
