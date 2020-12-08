@@ -20,11 +20,15 @@ jobs:
         run: >
           echo ${{ secrets.SIGN_WIN_CERT }} | base64 --decode > cert.pfx &&
           powershell //C "\$Password = ConvertTo-SecureString ${{ secrets.SIGN_WIN_PASS }} -AsPlainText -Force; echo \$Password; Import-PfxCertificate -FilePath cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password \$Password"
+      - name: Download AccessControl plugin
+        uses: suisei-cn/actions-download-file@v1
+        with:
+          url: https://nsis.sourceforge.io/mediawiki/images/4/4a/AccessControl.zip
+          target: "C:/Program Files (x86)/NSIS"
       - name: Install NSIS plugins
         shell: bash
         working-directory: "C:/Program Files (x86)/NSIS"
         run: >
-          wget --quiet https://nsis.sourceforge.io/mediawiki/images/4/4a/AccessControl.zip &&
           unzip -qq AccessControl.zip &&
           rm AccessControl.zip
       - name: Install requirements
