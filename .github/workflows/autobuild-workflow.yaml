@@ -18,20 +18,20 @@ jobs:
       - name: Import certificate
         shell: bash
         run: >
-          echo $SIGN_WIN_CERT | base64 --decode > cert.pfx
+          echo $SIGN_WIN_CERT | base64 --decode > cert.pfx &&
           powershell //C "\$Password = ConvertTo-SecureString $SIGN_WIN_PASS -AsPlainText -Force; echo \$Password; Import-PfxCertificate -FilePath cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password \$Password"
       - name: Install NSIS plugins
         shell: bash
         working-directory: "C:/Program Files (x86)/NSIS"
         run: >
-          wget --quiet https://nsis.sourceforge.io/mediawiki/images/4/4a/AccessControl.zip
-          unzip -qq AccessControl.zip
+          wget --quiet https://nsis.sourceforge.io/mediawiki/images/4/4a/AccessControl.zip &&
+          unzip -qq AccessControl.zip &&
           rm AccessControl.zip
       - name: Install requirements
         shell: bash
         run: >
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install --upgrade requests pyinstaller
+          python -m pip install --upgrade pip setuptools wheel &&
+          python -m pip install --upgrade requests pyinstaller &&
           python -m pip install -r requirements.txt
       - name: Build executable
         shell: powershell

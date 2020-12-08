@@ -1,6 +1,8 @@
 *.py[c|o]
 __pycache__
 
+.vs
+
 build
 dist
 
