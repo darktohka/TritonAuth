@@ -18,8 +18,8 @@ jobs:
       - name: Import certificate
         shell: bash
         run: >
-          echo $SIGN_WIN_CERT | base64 --decode > cert.pfx &&
-          powershell //C "\$Password = ConvertTo-SecureString $SIGN_WIN_PASS -AsPlainText -Force; echo \$Password; Import-PfxCertificate -FilePath cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password \$Password"
+          echo ${{ secrets.SIGN_WIN_CERT }} | base64 --decode > cert.pfx &&
+          powershell //C "\$Password = ConvertTo-SecureString ${{ secrets.SIGN_WIN_PASS }} -AsPlainText -Force; echo \$Password; Import-PfxCertificate -FilePath cert.pfx -CertStoreLocation Cert:\LocalMachine\My -Password \$Password"
       - name: Install NSIS plugins
         shell: bash
         working-directory: "C:/Program Files (x86)/NSIS"
@@ -35,6 +35,11 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Build executable
         shell: powershell
-        working-directory: "./scripts"
+        working-directory: ./scripts
+        env:
+          SIGN_WIN_TIMESTAMP: ${{ secrets.SIGN_WIN_TIMESTAMP }}
+          SIGN_WIN_SUBJECT: ${{ secrets.SIGN_WIN_SUBJECT }}
+          DEPLOY_ENDPOINT: ${{ secrets.DEPLOY_ENDPOINT }}
+          DEPLOY_LOGIN: ${{ secrets.DEPLOY_LOGIN }}
         run: >
           ./build.bat
