@@ -1,6 +1,6 @@
-from PyQt5.QtCore import Qt, QEvent
-from PyQt5.QtGui import QFont, QIcon
-from PyQt5.QtWidgets import QDesktopWidget, QWidget, QLabel, QLineEdit, QHBoxLayout
+from PySide6.QtCore import Qt, QEvent
+from PySide6.QtGui import QFont, QIcon
+from PySide6.QtWidgets import QWidget, QLabel, QLineEdit, QHBoxLayout
 import os
 
 class TritonWidget(QWidget):
@@ -19,7 +19,7 @@ class TritonWidget(QWidget):
 
     def center(self):
         qr = self.frameGeometry()
-        cp = QDesktopWidget().availableGeometry().center()
+        cp = self.screen().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
@@ -83,7 +83,7 @@ class EditableLabel(QLabel):
         self.editor.setFixedSize(rect.size())
         self.editor.move(self.mapToGlobal(rect.topLeft()))
         self.editor.setText(self.text())
-        self.editor.setFocus(True)
+        self.editor.setFocus(Qt.MouseFocusReason)
         self.editor.selectAll()
 
         if not self.editor.isVisible():

@@ -1,12 +1,12 @@
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPalette, QFont, QPixmap, QBrush, QColor
-from PyQt5.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget, QLabel, QMenu, QAction, QMessageBox
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QPalette, QFont, QPixmap, QBrush, QColor, QAction
+from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget, QLabel, QMenu, QMessageBox
 from .TritonWidget import TritonWidget, EditableLabel
 from .PixmapButton import PixmapButton
 from .ShowSecretWidget import ShowSecretWidget
 from .EditIconWidget import EditIconWidget
 from . import Globals
-from qroundprogressbar import QRoundProgressBar
+from .QRoundProgressBar import QRoundProgressBar
 import time
 
 class EntryWidget(TritonWidget):

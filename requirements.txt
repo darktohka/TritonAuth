@@ -1,6 +1,5 @@
 wheel
 pyotp
-PyCryptoDome
-PyQt5
-Pillow
-qroundprogressbar
+pycryptodome
+pyside6
+pillow

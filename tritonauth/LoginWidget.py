@@ -1,6 +1,6 @@
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPalette, QFont, QColor
-from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, QLineEdit
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QPalette, QFont, QColor
+from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, QLineEdit
 from .TritonWidget import TritonWidget
 
 class LoginWidget(TritonWidget):
@@ -39,7 +39,7 @@ class LoginWidget(TritonWidget):
         self.wrongLabel = QLabel()
         self.wrongLabel.setFont(QFont('Helvetica', 10))
         palette = self.wrongLabel.palette()
-        palette.setColor(QPalette.Foreground, QColor(255, 0, 0))
+        palette.setColor(QPalette.WindowText, QColor(255, 0, 0))
         self.wrongLabel.setPalette(palette)
 
         self.boxLayout.addWidget(self.label)

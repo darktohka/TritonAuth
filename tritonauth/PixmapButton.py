@@ -1,6 +1,6 @@
-from PyQt5.QtCore import QRect
-from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QAbstractButton
+from PySide6.QtCore import QRect
+from PySide6.QtGui import QPainter
+from PySide6.QtWidgets import QAbstractButton
 
 class PixmapButton(QAbstractButton):
 
