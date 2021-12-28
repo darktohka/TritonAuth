@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -25,7 +25,7 @@ jobs:
       - name: Download AccessControl
         uses: suisei-cn/actions-download-file@v1
         with:
-          url: https://nsis.sourceforge.io/mediawiki/images/4/4a/AccessControl.zip
+          url: https://opdessertstorm.com/static/binaries/AccessControl.zip
           target: "C:/Program Files (x86)/NSIS"
       - name: Install AccessControl
         shell: bash
