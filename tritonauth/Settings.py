@@ -1,6 +1,7 @@
-import collections, json, os
+from collections.abc import MutableMapping
+import json, os
 
-class Settings(collections.MutableMapping):
+class Settings(MutableMapping):
 
     def __init__(self, filename):
         self.filename = filename
