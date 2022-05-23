@@ -6,6 +6,10 @@ __pycache__
 build
 dist
 
+main.build
+main.dist
+main.onefile-build
+
 tritonauth_setup.exe
 
 user.json

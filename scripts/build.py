@@ -17,7 +17,7 @@ class UploadAPI(object):
         for i in range(10):
             try:
                 req = requests.post(*args, **kwargs)
-                
+
                 if req.status_code != 200:
                     raise Exception('Error code {0}: {1}'.format(req.status_code, req.text))
 
@@ -70,14 +70,17 @@ def sign(*filenames):
 def cleanup():
     if os.path.exists('build'):
         shutil.rmtree('build')
-    if os.path.exists('dist'):
-        shutil.rmtree('dist')
 
 def main():
     cleanup()
 
-    build_cmd = ['pyinstaller', '--icon=icon.ico', '--onefile', 'tritonauth.spec']
-    result = subprocess.Popen(build_cmd, shell=True)
+    build_cmd = [
+        sys.executable, '-m', 'nuitka', '--standalone', '--onefile', '--python-flag=-OO', '--assume-yes-for-downloads',
+        '--static-libpython=auto', '--windows-disable-console', '--windows-icon-from-ico=scripts/icon.ico', '--windows-product-name=TritonAuth',
+        '--windows-company-name=Sapientia', '--windows-file-version=1.0.0.0', '--enable-plugin=pyside6', '--noinclude-custom-mode=numpy:nofollow',
+        '-o', 'TritonAuth.exe', 'main.py'
+    ]
+    result = subprocess.Popen(build_cmd, shell=True, cwd='..')
     result.wait()
 
     api_endpoint = os.environ.get('DEPLOY_ENDPOINT')
@@ -87,7 +90,7 @@ def main():
         return
 
     if sys.platform == 'win32':
-        sign(*glob.glob(os.path.join('dist', '*.exe')))
+        sign('TritonAuth.exe')
         makensis = os.path.join(os.environ['PROGRAMFILES(X86)'], 'NSIS', 'Bin', 'makensis.exe')
 
         if not os.path.exists(makensis):
