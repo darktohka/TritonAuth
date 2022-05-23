@@ -36,7 +36,7 @@ jobs:
       - name: Install Python requirements
         shell: bash
         run: >
-          python -m pip install --upgrade requests nuitka zstandard &&
+          python -m pip install --upgrade nuitka zstandard &&
           python -m pip install -r requirements.txt
       - name: Build executable
         shell: powershell
@@ -44,7 +44,10 @@ jobs:
         env:
           SIGN_WIN_TIMESTAMP: ${{ secrets.SIGN_WIN_TIMESTAMP }}
           SIGN_WIN_SUBJECT: ${{ secrets.SIGN_WIN_SUBJECT }}
-          DEPLOY_ENDPOINT: ${{ secrets.DEPLOY_ENDPOINT }}
-          DEPLOY_LOGIN: ${{ secrets.DEPLOY_LOGIN }}
         run: >
           ./build.bat
+      - name: Upload installer
+        uses: actions/upload-artifact@v2
+        with:
+          name: TritonAuth
+          path: scripts/tritonauth_setup.exe
