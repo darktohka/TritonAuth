@@ -33,7 +33,7 @@ class WelcomeWidget(TritonWidget):
         self.subtitle = QLabel('Your one stop shop for two factor authentication')
         self.subtitle.setFont(font)
 
-        self.label = QLabel('TritonAuth is a two-factor authentication application for Windows.\nIt generates Time-based One-time Passwords (TOTP) for you.\n\nTo get started, choose a secure password:')
+        self.label = QLabel('TritonAuth is a two-factor authentication application for Windows.\nIt generates Time-based One-time Passwords (TOTP) for you.\n\nTo begin your journey, choose a secure password:')
         self.label.setFont(QFont('Helvetica', 11))
 
         self.passwordWidget = TextboxWidget(base, 'Password:')
@@ -91,9 +91,9 @@ class WelcomeWidget(TritonWidget):
             self.proceedButton.setEnabled(False)
             return
 
-        if password:
+        try:
             entropy = PasswordStats(password).strength()
-        else:
+        except:
             entropy = 0
 
         if entropy < 0.33:
