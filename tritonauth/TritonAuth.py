@@ -5,6 +5,7 @@ from PIL import Image
 
 from .Settings import Settings
 from .LoginWidget import LoginWidget
+from .WelcomeWidget import WelcomeWidget
 from .MainWidget import MainWidget
 from . import AESCipher, Globals, SteamUtils
 import sys, json, re
@@ -105,7 +106,11 @@ class TritonAuth(object):
 
     def startLogin(self):
         self.stopLogin()
-        self.login = LoginWidget(self)
+
+        if self.isSetup():
+            self.login = LoginWidget(self)
+        else:
+            self.login = WelcomeWidget(self)
 
     def stopLogin(self):
         if self.login:
@@ -133,12 +138,12 @@ class TritonAuth(object):
         if not self.isSetup():
             self.saveData()
             return True
-        else:
-            try:
-                self.loadData()
-                return True
-            except:
-                return Globals.ErrorWrongPassword
+
+        try:
+            self.loadData()
+            return True
+        except:
+            return Globals.ErrorWrongPassword
 
     def mainLoop(self):
         self.app.exec_()

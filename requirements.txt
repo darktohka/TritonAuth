@@ -5,3 +5,4 @@ pyside6
 pillow
 pyperclip
 zxing-cpp
+password-strength
