@@ -126,17 +126,22 @@ class TritonAuth(object):
             self.main.close()
             self.main = None
 
+    def resetKey(self, password, save=True):
+        self.key = AESCipher.getKey(password)
+
+        if save:
+            self.saveData()
+
     def authenticate(self, password):
         if not password:
             return Globals.ErrorNoPassword
         elif len(password) < 6:
             return Globals.ErrorShortPassword
 
-        self.key = AESCipher.getKey(password)
         self.data = {'accounts': []}
+        self.resetKey(password, save=not self.isSetup())
 
         if not self.isSetup():
-            self.saveData()
             return True
 
         try:

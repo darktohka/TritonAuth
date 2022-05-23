@@ -1,12 +1,14 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeyEvent, QAction
 from PySide6.QtWidgets import QMenuBar, QWidget, QScrollArea, QVBoxLayout, QFileDialog, QMessageBox
+from tritonauth.ResetPasswordWidget import ResetPasswordWidget
 from .TritonWidget import TritonWidget
 from .EntryWidget import EntryWidget
 from .EmptyTutorialWidget import EmptyTutorialWidget
 from .AddOTPWidget import AddOTPWidget
 from .AddSteamWidget import AddSteamWidget
 from .AboutWidget import AboutWidget
+from .ResetPasswordWidget import ResetPasswordWidget
 from . import Globals
 import base64, webbrowser, json
 
@@ -14,8 +16,7 @@ class MainWidget(TritonWidget):
 
     def __init__(self, base):
         TritonWidget.__init__(self, base)
-        self.addOTP = None
-        self.aboutProgram = None
+        self.subWindow = None
         self.closeEvent = self.widgetDeleted
 
         self.setWindowTitle('TritonAuth')
@@ -31,17 +32,17 @@ class MainWidget(TritonWidget):
         self.addMenu.addAction(self.authAction)
         self.addMenu.addAction(self.steamAction)
 
-        self.sortMenu = self.menu.addMenu('Sort')
+        self.manageMenu = self.menu.addMenu('Manage')
         self.nameAction = QAction('Sort By Name...', self)
         self.nameAction.triggered.connect(self.sortByName)
-
-        self.sortMenu.addAction(self.nameAction)
-
-        self.exportMenu = self.menu.addMenu('Export')
         self.andOTPAction = QAction('Export To andOTP...', self)
         self.andOTPAction.triggered.connect(self.exportToAndOTP)
+        self.resetPasswordAction = QAction('Reset Password...', self)
+        self.resetPasswordAction.triggered.connect(self.openResetPassword)
 
-        self.exportMenu.addAction(self.andOTPAction)
+        self.manageMenu.addAction(self.nameAction)
+        self.manageMenu.addAction(self.resetPasswordAction)
+        self.manageMenu.addAction(self.andOTPAction)
 
         self.aboutMenu = self.menu.addMenu('Help')
         self.documentationAction = QAction('Open Documentation...')
@@ -97,18 +98,12 @@ class MainWidget(TritonWidget):
             break
 
     def widgetDeleted(self, arg):
-        self.closeAddOTP()
-        self.closeAboutProgram()
+        self.closeSubWindow()
 
-    def closeAddOTP(self):
-        if self.addOTP:
-            self.addOTP.close()
-            self.addOTP = None
-
-    def closeAboutProgram(self):
-        if self.aboutProgram:
-            self.aboutProgram.close()
-            self.aboutProgram = None
+    def closeSubWindow(self):
+        if self.subWindow:
+            self.subWindow.close()
+            self.subWindow = None
 
     def addAccount(self, account):
         if self.scrollLayout.count() == 1 and isinstance(self.scrollLayout.itemAt(0).widget(), EmptyTutorialWidget):
@@ -151,17 +146,21 @@ class MainWidget(TritonWidget):
     def openDocumentation(self):
         webbrowser.open(Globals.DocumentationURL)
 
+    def openResetPassword(self):
+        self.closeSubWindow()
+        self.subWindow = ResetPasswordWidget(self.base)
+
     def openAboutProgram(self):
-        self.closeAboutProgram()
-        self.aboutProgram = AboutWidget(self.base)
+        self.closeSubWindow()
+        self.subWindow = AboutWidget(self.base)
 
     def openAddOTP(self):
-        self.closeAddOTP()
-        self.addOTP = AddOTPWidget(self.base)
+        self.closeSubWindow()
+        self.subWindow = AddOTPWidget(self.base)
 
     def openAddSteam(self):
-        self.closeAddOTP()
-        self.addOTP = AddSteamWidget(self.base)
+        self.closeSubWindow()
+        self.subWindow = AddSteamWidget(self.base)
 
     def sortByName(self):
         self.base.sortAccountsByName()
