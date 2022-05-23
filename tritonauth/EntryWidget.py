@@ -7,6 +7,7 @@ from .ShowSecretWidget import ShowSecretWidget
 from .EditIconWidget import EditIconWidget
 from . import Globals
 from .QRoundProgressBar import QRoundProgressBar
+import pyperclip
 import time
 
 class EntryWidget(TritonWidget):
@@ -128,7 +129,12 @@ class EntryWidget(TritonWidget):
         font = QFont('Helvetica', 13, weight=QFont.Bold)
         font.setLetterSpacing(QFont.PercentageSpacing, 110)
 
-        self.passLabel.setText(self.getValue())
+        code = self.getValue()
+
+        # Copy two-factor code to the clipboard
+        pyperclip.copy(code)
+
+        self.passLabel.setText(code)
         self.passLabel.setFont(font)
         self.passLabel.enableEdit()
         self.showButton.hide()

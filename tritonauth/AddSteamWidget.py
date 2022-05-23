@@ -81,8 +81,10 @@ class AddSteamWidget(TritonWidget):
             self.invalidateSecret('Invalid')
             return
 
+        code = self.base.getAuthCode(self.getAccount())
+
         try:
-            self.verifyBox.setText(self.base.getAuthCode(self.getAccount()))
+            self.verifyBox.setText(code)
         except:
             self.invalidateSecret('Invalid')
 

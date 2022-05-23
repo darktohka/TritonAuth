@@ -3,3 +3,4 @@ pyotp
 pycryptodome
 pyside6
 pillow
+pyperclip
