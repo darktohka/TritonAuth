@@ -26,7 +26,7 @@ class EditIconWidget(TritonWidget):
                 self.boxLayout.addWidget(widget)
 
             name = os.path.join('icons', icon)
-            button = PixmapButton(QPixmap(name).scaled(48, 48))
+            button = PixmapButton(QPixmap(name).scaled(48, 48, Qt.IgnoreAspectRatio, Qt.SmoothTransformation))
             button.clicked.connect(self.makeIconCallback(name))
             button.setToolTip(icon)
             layout.addWidget(button)

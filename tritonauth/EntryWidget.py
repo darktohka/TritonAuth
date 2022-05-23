@@ -47,7 +47,7 @@ class EntryWidget(TritonWidget):
         self.detailLayout.addWidget(self.nameLabel)
         self.detailLayout.addWidget(self.passLabel)
 
-        self.showButton = PixmapButton(QPixmap('icons/RefreshIcon.png').scaled(48, 48))
+        self.showButton = PixmapButton(QPixmap('icons/RefreshIcon.png').scaled(48, 48, Qt.IgnoreAspectRatio, Qt.SmoothTransformation))
         self.showButton.clicked.connect(self.buttonPressed)
 
         self.timerProgress = QRoundProgressBar()
@@ -105,7 +105,7 @@ class EntryWidget(TritonWidget):
         self.menu.exec_(self.mapToGlobal(point))
 
     def reloadIcon(self):
-        pixmap = QPixmap(self.icon).scaled(48, 48)
+        pixmap = QPixmap(self.icon).scaled(48, 48, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
         self.image.setPixmap(pixmap)
 
     def stopTimer(self):
