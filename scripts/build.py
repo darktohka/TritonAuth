@@ -2,8 +2,8 @@ assert __debug__ is False # Run with -OO
 import hashlib, traceback, shutil, subprocess, sys, os, glob
 import requests
 
-if sys.version_info < (3, 7, 3):
-    print('Your python compiler is too old. Please upgrade to 3.7.3 or higher.')
+if sys.version_info < (3, 10, 4):
+    print('Your Python compiler is too old. Please upgrade to 3.10.4 or higher.')
     sys.exit()
 
 class UploadAPI(object):

@@ -11,8 +11,8 @@ def _unpad(s):
 def getKey(s):
     if len(s) == 32:
         return s
-    else:
-        return hashlib.sha256(s.encode()).digest()
+
+    return hashlib.sha256(s.encode()).digest()
 
 def encrypt(key, raw):
     raw = _pad(raw)
