@@ -74,6 +74,8 @@ class WelcomeWidget(TritonWidget):
         self.center()
         self.show()
 
+        self.passwordWidget.box.setFocus(Qt.MouseFocusReason)
+
         self.updateStrengthLabel()
 
     def setStrengthLabelColor(self, color):

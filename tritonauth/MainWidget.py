@@ -3,6 +3,7 @@ from PySide6.QtGui import QKeyEvent, QAction
 from PySide6.QtWidgets import QMenuBar, QWidget, QScrollArea, QVBoxLayout, QFileDialog
 from .TritonWidget import TritonWidget
 from .EntryWidget import EntryWidget
+from .EmptyTutorialWidget import EmptyTutorialWidget
 from .AddOTPWidget import AddOTPWidget
 from .AddSteamWidget import AddSteamWidget
 from . import Globals
@@ -75,9 +76,11 @@ class MainWidget(TritonWidget):
         for i in range(self.scrollLayout.count()):
             widget = self.scrollLayout.itemAt(i).widget()
 
-            if widget is not None and widget.name[0].lower() == letter:
-                self.scrollArea.verticalScrollBar().setValue(widget.geometry().top())
-                return
+            if widget is None or isinstance(widget, EmptyTutorialWidget) or widget.name[0].lower() != letter:
+                continue
+
+            self.scrollArea.verticalScrollBar().setValue(widget.geometry().top())
+            break
 
     def widgetDeleted(self, arg):
         self.closeAddOTP()
@@ -88,23 +91,42 @@ class MainWidget(TritonWidget):
             self.addOTP = None
 
     def addAccount(self, account):
+        if self.scrollLayout.count() == 1 and isinstance(self.scrollLayout.itemAt(0).widget(), EmptyTutorialWidget):
+            self.clearAccounts()
+
         entry = EntryWidget(self.base, account)
         self.scrollLayout.addWidget(entry)
 
     def deleteAccount(self, account):
         for i in range(self.scrollLayout.count()):
-            widget = self.scrollLayout.itemAt(i).widget()
+            item = self.scrollLayout.itemAt(i)
+            widget = item.widget()
 
-            if widget.account == account:
+            if (not isinstance(widget, EmptyTutorialWidget)) and widget.account == account:
                 widget.close()
+                self.scrollLayout.removeItem(self.scrollLayout.itemAt(i))
+                break
+
+        if self.scrollLayout.count() == 0:
+            self.scrollLayout.addWidget(EmptyTutorialWidget(self.base, self))
 
     def clearAccounts(self):
         for i in range(self.scrollLayout.count()):
-            self.scrollLayout.itemAt(i).widget().close()
+            item = self.scrollLayout.itemAt(i)
+
+            item.widget().close()
+            self.scrollLayout.removeItem(item)
 
     def createAccounts(self):
-        for account in self.base.getAccounts():
+        self.clearAccounts()
+
+        accounts = self.base.getAccounts()
+
+        for account in accounts:
             self.addAccount(account)
+
+        if not accounts:
+            self.scrollLayout.addWidget(EmptyTutorialWidget(self.base, self))
 
     def openAddOTP(self):
         self.closeAddOTP()
@@ -116,7 +138,6 @@ class MainWidget(TritonWidget):
 
     def sortByName(self):
         self.base.sortAccountsByName()
-        self.clearAccounts()
         self.createAccounts()
 
     def exportToAndOTP(self):

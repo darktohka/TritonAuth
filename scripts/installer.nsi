@@ -86,6 +86,7 @@ AccessControl::EnableFileInheritance "$INSTDIR"
 File "..\TritonAuth.exe"
 File "icon.ico"
 File /r "..\icons"
+File /r "..\assets"
 CreateShortCut "$DESKTOP\TritonAuth.lnk" "$INSTDIR\TritonAuth.exe" "" "$INSTDIR\icon.ico" 0
 
 WriteUninstaller "$INSTDIR\uninstall.exe"
