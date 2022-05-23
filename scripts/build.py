@@ -90,7 +90,7 @@ def main():
         return
 
     if sys.platform == 'win32':
-        sign('TritonAuth.exe')
+        sign('../TritonAuth.exe')
         makensis = os.path.join(os.environ['PROGRAMFILES(X86)'], 'NSIS', 'Bin', 'makensis.exe')
 
         if not os.path.exists(makensis):
