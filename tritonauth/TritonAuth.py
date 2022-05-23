@@ -2,6 +2,7 @@ from PySide6.QtWidgets import QApplication, QMessageBox
 from urllib.parse import urlparse, parse_qs
 from urllib.request import urlopen
 from PIL import Image
+
 from .Settings import Settings
 from .LoginWidget import LoginWidget
 from .MainWidget import MainWidget

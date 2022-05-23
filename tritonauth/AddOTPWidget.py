@@ -1,7 +1,8 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QPalette, QFont
-from PySide6.QtWidgets import QVBoxLayout, QLabel, QLineEdit, QPushButton
+from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QWidget
 from .TritonWidget import TritonWidget, TextboxWidget
+from .ScanQRWidget import ScanQRWidget
 from . import Globals
 
 class AddOTPWidget(TritonWidget):
@@ -9,6 +10,7 @@ class AddOTPWidget(TritonWidget):
     def __init__(self, base, *args, **kwargs):
         TritonWidget.__init__(self, base, *args, **kwargs)
         self.key = None
+        self.scanWindow = None
         self.type = Globals.OTPAuth
 
         self.setWindowTitle('Add Authenticator')
@@ -20,13 +22,25 @@ class AddOTPWidget(TritonWidget):
         self.nameWidget = TextboxWidget(base, 'Name:')
 
         self.secretLabel = QLabel()
-        self.secretLabel.setText('Enter the Secret Code. If you have a QR code,\nyou can paste the URL of the image instead.')
+        self.secretLabel.setText('Enter the Secret Code. If you have a QR code,\nyou can scan the QR code instead.')
         self.secretLabel.setFont(QFont('Helvetica', 10))
 
         self.secretBox = QLineEdit()
-        self.secretBox.setFixedWidth(300)
+        self.secretBox.setFixedWidth(220)
         self.secretBox.setFont(QFont('Helvetica', 10))
         self.secretBox.textChanged.connect(lambda text: self.invalidateSecret())
+
+        self.scanButton = QPushButton('Scan QR')
+        self.scanButton.clicked.connect(self.openScanWindow)
+
+        self.secretWidget = QWidget()
+        self.secretLayout = QHBoxLayout()
+        self.secretLayout.setContentsMargins(0, 0, 0, 0)
+
+        self.secretLayout.addWidget(self.secretBox)
+        self.secretLayout.addWidget(self.scanButton)
+
+        self.secretWidget.setLayout(self.secretLayout)
 
         self.verifyLabel = QLabel()
         self.verifyLabel.setText('Click the Verify button to check the first code.')
@@ -52,7 +66,7 @@ class AddOTPWidget(TritonWidget):
         self.boxLayout.addWidget(self.nameWidget)
         self.boxLayout.addSpacing(10)
         self.boxLayout.addWidget(self.secretLabel)
-        self.boxLayout.addWidget(self.secretBox)
+        self.boxLayout.addWidget(self.secretWidget)
         self.boxLayout.addSpacing(10)
         self.boxLayout.addWidget(self.verifyLabel)
         self.boxLayout.addWidget(self.verifyBox, 0, Qt.AlignCenter)
@@ -63,6 +77,16 @@ class AddOTPWidget(TritonWidget):
         self.setFixedSize(self.sizeHint())
         self.center()
         self.show()
+
+    def closeEvent(self, event):
+        self.cleanupWindows()
+        event.accept()
+
+    def cleanupWindows(self):
+        if self.scanWindow:
+            self.scanWindow.close()
+
+        self.scanWindow = None
 
     def getName(self):
         return self.nameWidget.box.text()
@@ -95,3 +119,13 @@ class AddOTPWidget(TritonWidget):
 
         self.base.addAccount(self.getAccount())
         self.close()
+
+    def openScanWindow(self):
+        self.cleanupWindows()
+        self.scanWindow = ScanQRWidget(self.base, self.__onScanComplete)
+
+    def __onScanComplete(self, code):
+        if code.name != -1 and not self.nameWidget.box.text().strip():
+            self.nameWidget.box.setText(code.name)
+
+        self.secretBox.setText(code.secret.upper())

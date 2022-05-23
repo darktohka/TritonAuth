@@ -4,3 +4,4 @@ pycryptodome
 pyside6
 pillow
 pyperclip
+zxing-cpp
