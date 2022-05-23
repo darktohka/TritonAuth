@@ -6,32 +6,25 @@ from PySide6.QtWidgets import QWidget
 from enum import Enum
 
 class QRoundProgressBar(QWidget):
-
-    # CONSTANTS
-
     PositionLeft = 180
     PositionTop = 90
     PositionRight = 0
     PositionBottom = -90
 
-    # CONSTRUCTOR ---------------------------------------------------
-
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
-        self.m_min = 0
-        self.m_max = 100
-        self.m_value = 25
-        self.m_nullPosition = QRoundProgressBar.PositionTop
-        self.m_barStyle = self.BarStyle.DONUT
-        self.m_outlinePenWidth = 1
-        self.m_dataPenWidth = 1
-        self.m_rebuildBrush = False
-        self.m_format = '%p%'
-        self.m_decimals = 1
-        self.m_updateFlags = self.UpdateFlags.PERCENT
-        self.m_gradientData = None
-
-    # ENUMS ---------------------------------------------------------
+        self.min = 0
+        self.max = 100
+        self.value = 25
+        self.nullPosition = QRoundProgressBar.PositionTop
+        self.barStyle = self.BarStyle.DONUT
+        self.outlinePenWidth = 1
+        self.dataPenWidth = 1
+        self.rebuildBrush = False
+        self.format = '%p%'
+        self.decimals = 1
+        self.updateFlags = self.UpdateFlags.PERCENT
+        self.gradientData = None
 
     class BarStyle(Enum):
         DONUT = 0,
@@ -44,97 +37,89 @@ class QRoundProgressBar(QWidget):
         PERCENT = 1,
         MAX = 2
 
-    # GETTERS -------------------------------------------------------
-
     def minimum(self):
-        return self.m_min
+        return self.min
 
     def maximum(self):
-        return self.m_max
-
-    # SETTERS -------------------------------------------------------
+        return self.max
 
     def setNullPosition(self, position: float):
-        if position != self.m_nullPosition:
-            self.m_nullPosition = position
-            self.m_rebuildBrush = True
+        if position != self.nullPosition:
+            self.nullPosition = position
+            self.rebuildBrush = True
             self.update()
 
     def setBarStyle(self, style: BarStyle):
-        if style != self.m_barStyle:
-            self.m_barStyle = style
-            self.m_rebuildBrush = True
+        if style != self.barStyle:
+            self.barStyle = style
+            self.rebuildBrush = True
             self.update()
 
     def setOutlinePenWidth(self, width: float):
-        if width != self.m_outlinePenWidth:
-            self.m_outlinePenWidth = width
+        if width != self.outlinePenWidth:
+            self.outlinePenWidth = width
             self.update()
 
     def setDataPenWidth(self, width: float):
-        if width != self.m_dataPenWidth:
-            self.m_dataPenWidth = width
+        if width != self.dataPenWidth:
+            self.dataPenWidth = width
             self.update()
 
     def setDataColors(self, stopPoints: list):
-        if stopPoints != self.m_gradientData:
-            self.m_gradientData = stopPoints
-            self.m_rebuildBrush = True
+        if stopPoints != self.gradientData:
+            self.gradientData = stopPoints
+            self.rebuildBrush = True
             self.update()
 
     def setFormat(self, val: str):
-        if val != self.m_format:
-            self.m_format = val
+        if val != self.format:
+            self.format = val
             self.valueFormatChanged()
 
     def resetFormat(self):
-        self.m_format = None
+        self.format = None
         self.valueFormatChanged()
 
     def setDecimals(self, count: int):
-        if count >= 0 and count != self.m_decimals:
-            self.m_decimals = count
+        if count >= 0 and count != self.decimals:
+            self.decimals = count
             self.valueFormatChanged()
-
-    # SLOTS ---------------------------------------------------------
 
     @Slot(float, float)
     def setRange(self, minval: float, maxval: float):
-        self.m_min = minval
-        self.m_max = maxval
+        self.min = minval
+        self.max = maxval
 
-        if self.m_max < self.m_min:
-            self.m_min = maxval
-            self.m_max = minval
-        if self.m_value < self.m_min:
-            self.m_value = self.m_min
-        elif self.m_value > self.m_max:
-            self.m_value = self.m_max
+        if self.max < self.min:
+            self.min = maxval
+            self.max = minval
+        if self.value < self.min:
+            self.value = self.min
+        elif self.value > self.max:
+            self.value = self.max
 
-        self.m_rebuildBrush = True
+        self.rebuildBrush = True
         self.update()
 
     @Slot(float)
     def setMinimum(self, val: float):
-        self.setRange(val, self.m_max)
+        self.setRange(val, self.max)
 
     @Slot(float)
     def setMaximum(self, val: float):
-        self.setRange(self.m_min, val)
+        self.setRange(self.min, val)
 
     @Slot(int)
     def setValue(self, val: int):
-        if self.m_value != val:
-            if val < self.m_min:
-                self.m_value = self.m_min
-            elif val > self.m_max:
-                self.m_value = self.m_max
+        if self.value != val:
+            if val < self.min:
+                self.value = self.min
+            elif val > self.max:
+                self.value = self.max
             else:
-                self.m_value = val
+                self.value = val
 
             self.update()
-
-    # PAINTING ------------------------------------------------------
 
     def paintEvent(self, event: QPaintEvent):
         outerRadius = min(self.width(), self.height())
@@ -143,25 +128,28 @@ class QRoundProgressBar(QWidget):
 
         p = QPainter(buffer)
         p.setRenderHint(QPainter.Antialiasing)
+        p.setRenderHint(QPainter.SmoothPixmapTransform)
 
         self.rebuildDataBrushIfNeeded()
         self.drawBackground(p, buffer.rect())
         self.drawBase(p, baseRect)
 
-        if self.m_value > 0:
-            delta = (self.m_max - self.m_min) / (self.m_value - self.m_min)
+        if self.value > 0:
+            delta = (self.max - self.min) / (self.value - self.min)
         else:
             delta = 0
 
-        self.drawValue(p, baseRect, self.m_value, delta)
+        self.drawValue(p, baseRect, self.value, delta)
 
         innerRect, innerRadius = self.calculateInnerRect(outerRadius)
 
         self.drawInnerBackground(p, innerRect)
-        self.drawText(p, innerRect, innerRadius, self.m_value)
+        self.drawText(p, innerRect, innerRadius, self.value)
         p.end()
 
         painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setRenderHint(QPainter.SmoothPixmapTransform)
         painter.fillRect(baseRect, self.palette().window())
         painter.drawImage(0, 0, buffer)
 
@@ -169,42 +157,42 @@ class QRoundProgressBar(QWidget):
         p.fillRect(baseRect, self.palette().window())
 
     def drawBase(self, p: QPainter, baseRect: QRectF):
-        if self.m_barStyle == self.BarStyle.DONUT:
-            p.setPen(QPen(self.palette().shadow().color(), self.m_outlinePenWidth))
+        if self.barStyle == self.BarStyle.DONUT:
+            p.setPen(QPen(self.palette().shadow().color(), self.outlinePenWidth))
             p.setBrush(self.palette().base())
             p.drawEllipse(baseRect)
-        elif self.m_barStyle == self.BarStyle.LINE:
-            p.setPen(QPen(self.palette().base().color(), self.m_outlinePenWidth))
+        elif self.barStyle == self.BarStyle.LINE:
+            p.setPen(QPen(self.palette().base().color(), self.outlinePenWidth))
             p.setBrush(Qt.NoBrush)
-            p.drawEllipse(baseRect.adjusted(self.m_outlinePenWidth / 2, self.m_outlinePenWidth / 2,
-                                            -self.m_outlinePenWidth / 2, -self.m_outlinePenWidth / 2))
-        elif self.m_barStyle in (self.BarStyle.PIE, self.BarStyle.EXPAND):
-            p.setPen(QPen(self.palette().base().color(), self.m_outlinePenWidth))
+            p.drawEllipse(baseRect.adjusted(self.outlinePenWidth / 2, self.outlinePenWidth / 2,
+                                            -self.outlinePenWidth / 2, -self.outlinePenWidth / 2))
+        elif self.barStyle in (self.BarStyle.PIE, self.BarStyle.EXPAND):
+            p.setPen(QPen(self.palette().base().color(), self.outlinePenWidth))
             p.setBrush(self.palette().base())
             p.drawEllipse(baseRect)
 
     def drawValue(self, p: QPainter, baseRect: QRectF, value: float, delta: float):
-        if value == self.m_min:
+        if value == self.min:
             return
 
-        if self.m_barStyle == self.BarStyle.EXPAND:
+        if self.barStyle == self.BarStyle.EXPAND:
             p.setBrush(self.palette().highlight())
-            p.setPen(QPen(self.palette().shadow().color(), self.m_dataPenWidth))
+            p.setPen(QPen(self.palette().shadow().color(), self.dataPenWidth))
             radius = (baseRect.height() / 2) / delta
             p.drawEllipse(baseRect.center(), radius, radius)
             return
-        elif self.m_barStyle == self.BarStyle.LINE:
-            p.setPen(QPen(self.palette().highlight().color(), self.m_dataPenWidth))
+        elif self.barStyle == self.BarStyle.LINE:
+            p.setPen(QPen(self.palette().highlight().color(), self.dataPenWidth))
             p.setBrush(Qt.NoBrush)
 
-            if value == self.m_max:
-                p.drawEllipse(baseRect.adjusted(self.m_outlinePenWidth / 2, self.m_outlinePenWidth / 2,
-                                                -self.m_outlinePenWidth / 2, -self.m_outlinePenWidth / 2))
+            if value == self.max:
+                p.drawEllipse(baseRect.adjusted(self.outlinePenWidth / 2, self.outlinePenWidth / 2,
+                                                -self.outlinePenWidth / 2, -self.outlinePenWidth / 2))
             else:
                 arcLength = 360 / delta
-                p.drawArc(baseRect.adjusted(self.m_outlinePenWidth / 2, self.m_outlinePenWidth / 2,
-                                            -self.m_outlinePenWidth / 2, -self.m_outlinePenWidth / 2),
-                          int(self.m_nullPosition * 16),
+                p.drawArc(baseRect.adjusted(self.outlinePenWidth / 2, self.outlinePenWidth / 2,
+                                            -self.outlinePenWidth / 2, -self.outlinePenWidth / 2),
+                          int(self.nullPosition * 16),
                           int(-arcLength * 16))
 
             return
@@ -212,21 +200,21 @@ class QRoundProgressBar(QWidget):
         dataPath = QPainterPath()
         dataPath.setFillRule(Qt.WindingFill)
 
-        if value == self.m_max:
+        if value == self.max:
             dataPath.addEllipse(baseRect)
         else:
             arcLength = 360 / delta
             dataPath.moveTo(baseRect.center())
-            dataPath.arcTo(baseRect, self.m_nullPosition, -arcLength)
+            dataPath.arcTo(baseRect, self.nullPosition, -arcLength)
             dataPath.lineTo(baseRect.center())
 
         p.setBrush(self.palette().highlight())
-        p.setPen(QPen(self.palette().shadow().color(), self.m_dataPenWidth))
+        p.setPen(QPen(self.palette().shadow().color(), self.dataPenWidth))
         p.drawPath(dataPath)
 
     def calculateInnerRect(self, outerRadius: float):
-        if self.m_barStyle in (self.BarStyle.LINE, self.BarStyle.EXPAND):
-            innerRadius = outerRadius - self.m_outlinePenWidth
+        if self.barStyle in (self.BarStyle.LINE, self.BarStyle.EXPAND):
+            innerRadius = outerRadius - self.outlinePenWidth
         else:
             innerRadius = outerRadius * 0.75
 
@@ -235,19 +223,19 @@ class QRoundProgressBar(QWidget):
         return innerRect, innerRadius
 
     def drawInnerBackground(self, p: QPainter, innerRect: QRectF):
-        if self.m_barStyle == self.BarStyle.DONUT:
+        if self.barStyle == self.BarStyle.DONUT:
             p.setBrush(self.palette().alternateBase())
             p.drawEllipse(innerRect)
 
     def drawText(self, p: QPainter, innerRect: QRectF, innerRadius: float, value: float):
-        if not self.m_format:
+        if not self.format:
             return
 
         f = QFont(self.font())
         f.setPixelSize(10)
 
         fm = QFontMetricsF(f)
-        maxWidth = fm.width(self.valueToText(self.m_max))
+        maxWidth = fm.width(self.valueToText(self.max))
         delta = innerRadius / maxWidth
         fontSize = f.pixelSize() * delta * 0.75
         f.setPixelSize(int(fontSize))
@@ -258,49 +246,49 @@ class QRoundProgressBar(QWidget):
         p.drawText(textRect, Qt.AlignCenter, self.valueToText(value))
 
     def valueToText(self, value: float):
-        textToDraw = self.m_format
+        textToDraw = self.format
 
-        if self.m_updateFlags == self.UpdateFlags.VALUE:
-            textToDraw = textToDraw.replace('%v', str(round(value, self.m_decimals)))
-        elif self.m_updateFlags == self.UpdateFlags.PERCENT:
-            procent = (value - self.m_min) / (self.m_max - self.m_min) * 100
-            textToDraw = textToDraw.replace('%p', str(round(procent, self.m_decimals)))
-        elif self.m_updateFlags == self.UpdateFlags.MAX:
-            textToDraw = textToDraw.replace('%m', str(round(self.m_max - self.m_min + 1, self.m_decimals)))
+        if self.updateFlags == self.UpdateFlags.VALUE:
+            textToDraw = textToDraw.replace('%v', str(round(value, self.decimals)))
+        elif self.updateFlags == self.UpdateFlags.PERCENT:
+            procent = (value - self.min) / (self.max - self.min) * 100
+            textToDraw = textToDraw.replace('%p', str(round(procent, self.decimals)))
+        elif self.updateFlags == self.UpdateFlags.MAX:
+            textToDraw = textToDraw.replace('%m', str(round(self.max - self.min + 1, self.decimals)))
 
         return textToDraw
 
     def valueFormatChanged(self):
-        if '%v' in self.m_format:
-            self.m_updateFlags = self.UpdateFlags.VALUE
-        elif '%p' in self.m_format:
-            self.m_updateFlags = self.UpdateFlags.PERCENT
-        elif '%m' in self.m_format:
-            self.m_updateFlags = self.UpdateFlags.MAX
+        if '%v' in self.format:
+            self.updateFlags = self.UpdateFlags.VALUE
+        elif '%p' in self.format:
+            self.updateFlags = self.UpdateFlags.PERCENT
+        elif '%m' in self.format:
+            self.updateFlags = self.UpdateFlags.MAX
 
         self.update()
 
     def rebuildDataBrushIfNeeded(self):
-        if not self.m_rebuildBrush or not self.m_gradientData or self.m_barStyle == self.BarStyle.LINE:
+        if not self.rebuildBrush or not self.gradientData or self.barStyle == self.BarStyle.LINE:
             return
 
-        self.m_rebuildBrush = False
+        self.rebuildBrush = False
         p = self.palette()
 
-        if self.m_barStyle == self.BarStyle.EXPAND:
+        if self.barStyle == self.BarStyle.EXPAND:
             dataBrush = QRadialGradient(0.5, 0.5, 0.5, 0.5, 0.5)
             dataBrush.setCoordinateMode(QGradient.StretchToDeviceMode)
 
-            for i in range(0, len(self.m_gradientData)):
-                dataBrush.setColorAt(self.m_gradientData[i][0], self.m_gradientData[i][1])
+            for i in range(0, len(self.gradientData)):
+                dataBrush.setColorAt(self.gradientData[i][0], self.gradientData[i][1])
 
             p.setBrush(QPalette.Highlight, dataBrush)
         else:
-            dataBrush = QConicalGradient(QPointF(0.5, 0.5), self.m_nullPosition)
+            dataBrush = QConicalGradient(QPointF(0.5, 0.5), self.nullPosition)
             dataBrush.setCoordinateMode(QGradient.StretchToDeviceMode)
 
-            for i in range(0, len(self.m_gradientData)):
-                dataBrush.setColorAt(1 - self.m_gradientData[i][0], self.m_gradientData[i][1])
+            for i in range(0, len(self.gradientData)):
+                dataBrush.setColorAt(1 - self.gradientData[i][0], self.gradientData[i][1])
 
             p.setBrush(QPalette.Highlight, dataBrush)
 
