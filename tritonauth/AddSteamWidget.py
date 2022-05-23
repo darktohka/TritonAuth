@@ -24,6 +24,8 @@ class AddSteamWidget(TritonWidget):
         self.sharedWidget = TextboxWidget(base, 'Shared Secret:')
         self.identityWidget = TextboxWidget(base, 'Identity Secret:')
 
+        self.nameWidget.box.textChanged.connect(self.reconsiderButtons)
+
         self.verifyLabel = QLabel()
         self.verifyLabel.setText('Click the Verify button to check the first code.')
         self.verifyLabel.setFont(QFont('Helvetica', 10))
@@ -44,6 +46,7 @@ class AddSteamWidget(TritonWidget):
 
         self.addButton = QPushButton('OK')
         self.addButton.clicked.connect(self.add)
+        self.addButton.setEnabled(False)
 
         self.boxLayout.addWidget(self.nameWidget)
         self.boxLayout.addWidget(self.steamIdWidget)
@@ -71,6 +74,7 @@ class AddSteamWidget(TritonWidget):
         self.identitySecret = None
         self.steamId = None
         self.verifyBox.setText(text)
+        self.reconsiderButtons()
 
     def checkVerify(self):
         self.sharedSecret = self.sharedWidget.box.text()
@@ -88,8 +92,16 @@ class AddSteamWidget(TritonWidget):
         except:
             self.invalidateSecret('Invalid')
 
+        self.reconsiderButtons()
+
+    def isButtonValid(self):
+        return bool(self.sharedSecret and self.getName())
+
+    def reconsiderButtons(self):
+        self.addButton.setEnabled(self.isButtonValid())
+
     def add(self):
-        if not self.sharedSecret or not self.getName():
+        if not self.isButtonValid():
             return
 
         self.base.addAccount(self.getAccount())

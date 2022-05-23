@@ -111,11 +111,6 @@ class ScanQRWidget(TritonWidget):
             return
 
         self.callback(secret)
-
-        if self.timer:
-            self.timer.stop()
-
-        self.cleanupCamera()
         self.close()
 
     def captureCamera(self):

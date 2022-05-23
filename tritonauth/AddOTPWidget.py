@@ -20,6 +20,7 @@ class AddOTPWidget(TritonWidget):
         self.boxLayout.setContentsMargins(20, 20, 20, 20)
 
         self.nameWidget = TextboxWidget(base, 'Name:')
+        self.nameWidget.box.textChanged.connect(self.reconsiderButtons)
 
         self.secretLabel = QLabel()
         self.secretLabel.setText('Enter the Secret Code. If you have a QR code,\nyou can scan the QR code instead.')
@@ -62,6 +63,7 @@ class AddOTPWidget(TritonWidget):
 
         self.addButton = QPushButton('OK')
         self.addButton.clicked.connect(self.add)
+        self.addButton.setEnabled(False)
 
         self.boxLayout.addWidget(self.nameWidget)
         self.boxLayout.addSpacing(10)
@@ -97,6 +99,7 @@ class AddOTPWidget(TritonWidget):
     def invalidateSecret(self, value=''):
         self.key = None
         self.verifyBox.setText(value)
+        self.reconsiderButtons()
 
     def checkVerify(self):
         self.key = self.secretBox.text()
@@ -113,8 +116,16 @@ class AddOTPWidget(TritonWidget):
         except:
             self.invalidateSecret('Invalid')
 
+        self.reconsiderButtons()
+
+    def isButtonValid(self):
+        return bool(self.key and self.getName())
+
+    def reconsiderButtons(self):
+        self.addButton.setEnabled(self.isButtonValid())
+
     def add(self):
-        if not self.key or not self.getName():
+        if not self.isButtonValid():
             return
 
         self.base.addAccount(self.getAccount())
