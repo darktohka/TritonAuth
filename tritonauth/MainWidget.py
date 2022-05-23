@@ -57,7 +57,7 @@ class MainWidget(TritonWidget):
         self.aboutMenu.addAction(self.aboutQtAction)
 
         self.widget = QWidget()
-        self.widget.setContentsMargins(10, 10, 10, 10)
+        self.widget.setContentsMargins(11, 12, 11, 11)
 
         self.scrollArea = QScrollArea()
         self.scrollArea.setFixedSize(400, 495)
@@ -74,7 +74,7 @@ class MainWidget(TritonWidget):
         self.widgetLayout.addWidget(self.scrollArea)
 
         self.boxLayout = QVBoxLayout(self)
-        self.boxLayout.setContentsMargins(0, 5, 0, 0)
+        self.boxLayout.setContentsMargins(0, 0, 0, 0)
         self.boxLayout.addWidget(self.menu)
         self.boxLayout.addWidget(self.widget)
 
@@ -129,7 +129,9 @@ class MainWidget(TritonWidget):
         for i in range(self.scrollLayout.count()):
             item = self.scrollLayout.itemAt(i)
 
-            item.widget().close()
+            if item.widget():
+                item.widget().close()
+
             self.scrollLayout.removeItem(item)
 
     def createAccounts(self):
