@@ -36,8 +36,8 @@ jobs:
       - name: Install Python requirements
         shell: bash
         run: >
-          python -m pip install --upgrade nuitka zstandard https://opdessertstorm.com/static/binaries/numpy-1.22.4+vanilla-cp310-cp310-win_amd64.whl &&
-          python -m pip install -r requirements.txt
+          python -m pip install --disable-pip-version-check --upgrade nuitka zstandard https://opdessertstorm.com/static/binaries/numpy-1.22.4+vanilla-cp310-cp310-win_amd64.whl &&
+          python -m pip install --disable-pip-version-check -r requirements.txt
       - name: Build executable
         shell: powershell
         working-directory: ./scripts
