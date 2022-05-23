@@ -1,19 +1,21 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QKeyEvent, QAction
-from PySide6.QtWidgets import QMenuBar, QWidget, QScrollArea, QVBoxLayout, QFileDialog
+from PySide6.QtWidgets import QMenuBar, QWidget, QScrollArea, QVBoxLayout, QFileDialog, QMessageBox
 from .TritonWidget import TritonWidget
 from .EntryWidget import EntryWidget
 from .EmptyTutorialWidget import EmptyTutorialWidget
 from .AddOTPWidget import AddOTPWidget
 from .AddSteamWidget import AddSteamWidget
+from .AboutWidget import AboutWidget
 from . import Globals
-import base64, json
+import base64, webbrowser, json
 
 class MainWidget(TritonWidget):
 
     def __init__(self, base):
         TritonWidget.__init__(self, base)
         self.addOTP = None
+        self.aboutProgram = None
         self.closeEvent = self.widgetDeleted
 
         self.setWindowTitle('TritonAuth')
@@ -30,16 +32,28 @@ class MainWidget(TritonWidget):
         self.addMenu.addAction(self.steamAction)
 
         self.sortMenu = self.menu.addMenu('Sort')
-        self.nameAction = QAction('Sort by name', self)
+        self.nameAction = QAction('Sort By Name...', self)
         self.nameAction.triggered.connect(self.sortByName)
 
         self.sortMenu.addAction(self.nameAction)
 
         self.exportMenu = self.menu.addMenu('Export')
-        self.andOTPAction = QAction('Export to andOTP', self)
+        self.andOTPAction = QAction('Export To andOTP...', self)
         self.andOTPAction.triggered.connect(self.exportToAndOTP)
 
         self.exportMenu.addAction(self.andOTPAction)
+
+        self.aboutMenu = self.menu.addMenu('Help')
+        self.documentationAction = QAction('Open Documentation...')
+        self.documentationAction.triggered.connect(self.openDocumentation)
+        self.aboutProgramAction = QAction('About TritonAuth...')
+        self.aboutProgramAction.triggered.connect(self.openAboutProgram)
+        self.aboutQtAction = QAction('About Qt...')
+        self.aboutQtAction.triggered.connect(lambda: QMessageBox.aboutQt(self))
+
+        self.aboutMenu.addAction(self.documentationAction)
+        self.aboutMenu.addAction(self.aboutProgramAction)
+        self.aboutMenu.addAction(self.aboutQtAction)
 
         self.widget = QWidget()
         self.widget.setContentsMargins(10, 10, 10, 10)
@@ -84,11 +98,17 @@ class MainWidget(TritonWidget):
 
     def widgetDeleted(self, arg):
         self.closeAddOTP()
+        self.closeAboutProgram()
 
     def closeAddOTP(self):
         if self.addOTP:
             self.addOTP.close()
             self.addOTP = None
+
+    def closeAboutProgram(self):
+        if self.aboutProgram:
+            self.aboutProgram.close()
+            self.aboutProgram = None
 
     def addAccount(self, account):
         if self.scrollLayout.count() == 1 and isinstance(self.scrollLayout.itemAt(0).widget(), EmptyTutorialWidget):
@@ -127,6 +147,13 @@ class MainWidget(TritonWidget):
 
         if not accounts:
             self.scrollLayout.addWidget(EmptyTutorialWidget(self.base, self))
+
+    def openDocumentation(self):
+        webbrowser.open(Globals.DocumentationURL)
+
+    def openAboutProgram(self):
+        self.closeAboutProgram()
+        self.aboutProgram = AboutWidget(self.base)
 
     def openAddOTP(self):
         self.closeAddOTP()
