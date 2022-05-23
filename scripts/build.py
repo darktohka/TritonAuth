@@ -17,7 +17,7 @@ def main():
     build_cmd = [
         sys.executable, '-OO', '-m', 'nuitka', '--standalone', '--onefile', '--python-flag=-OO', '--assume-yes-for-downloads',
         '--static-libpython=auto', '--windows-disable-console', '--windows-icon-from-ico=scripts/icon.ico', '--windows-product-name=TritonAuth',
-        '--windows-company-name=Sapientia', '--windows-file-version=1.0.0.0', '--enable-plugin=pyside6', '--noinclude-custom-mode=numpy:nofollow',
+        '--windows-company-name=Sapientia', '--windows-file-version=1.0.0.0', '--enable-plugin=pyside6', '--enable-plugin=numpy',
         '-o', 'TritonAuth.exe', 'main.py'
     ]
     result = subprocess.Popen(build_cmd, shell=True, cwd='..')
