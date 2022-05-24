@@ -180,3 +180,5 @@ class MainWidget(TritonWidget):
         if filename:
             with open(filename, 'w') as file:
                 file.write(accounts)
+
+        QMessageBox.information(self, 'TritonAuth', f'Your andOTP database has been exported to {filename}!', QMessageBox.Ok)
