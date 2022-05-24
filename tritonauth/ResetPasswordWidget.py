@@ -1,10 +1,8 @@
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QPalette, QFont, QColor, QPixmap
+from PySide6.QtGui import QPalette, QFont, QColor
 from PySide6.QtWidgets import QVBoxLayout, QWidget, QLabel, QPushButton, QLineEdit, QMessageBox
-from .PixmapButton import PixmapButton
 from .TritonWidget import TritonWidget, TextboxWidget
 from password_strength import PasswordStats
-import os
 
 class ResetPasswordWidget(TritonWidget):
 

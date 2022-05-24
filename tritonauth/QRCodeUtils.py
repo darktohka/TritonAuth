@@ -1,5 +1,5 @@
 
-from PySide6.QtGui import QImage
+from PySide6.QtGui import QImage, QPixmap
 from PIL import Image
 import zxingcpp, pyotp
 import base64
@@ -24,6 +24,8 @@ def convertTextToSecret(text: str):
         return None
 
 def captureSecretFromImage(image):
+    if isinstance(image, QPixmap):
+        image = image.toImage()
     if isinstance(image, QImage):
         image = convertQtImageToPillow(image)
 

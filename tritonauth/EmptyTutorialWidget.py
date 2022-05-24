@@ -1,14 +1,9 @@
-from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QPalette, QFont, QPixmap, QBrush, QColor, QAction, QPixmap
-from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget, QLabel, QMenu, QMessageBox, QPushButton
-from .TritonWidget import TritonWidget, EditableLabel
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont, QPixmap, QPixmap
+from PySide6.QtWidgets import QVBoxLayout, QLabel, QPushButton
+from .TritonWidget import TritonWidget
 from .PixmapButton import PixmapButton
-from .ShowSecretWidget import ShowSecretWidget
-from .EditIconWidget import EditIconWidget
-from . import Globals
-from .QRoundProgressBar import QRoundProgressBar
-import pyperclip
-import time, os
+import os
 
 class EmptyTutorialWidget(TritonWidget):
 

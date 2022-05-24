@@ -1,8 +1,9 @@
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtGui import QPalette, QFont
 from PySide6.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QWidget
 from .TritonWidget import TritonWidget, TextboxWidget
 from .ScanQRWidget import ScanQRWidget
+from .QRCodeUtils import captureSecretFromImage
 from . import Globals
 
 class AddOTPWidget(TritonWidget):
@@ -76,13 +77,38 @@ class AddOTPWidget(TritonWidget):
         self.boxLayout.addSpacing(10)
         self.boxLayout.addWidget(self.addButton, 0, Qt.AlignRight)
 
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.scanDesktops)
+        self.timer.start(1000)
+
         self.setFixedSize(self.sizeHint())
         self.center()
         self.show()
 
+    def stopTimer(self):
+        if self.timer:
+            self.timer.stop()
+            self.timer.deleteLater()
+
+        self.timer = None
+
     def closeEvent(self, event):
         self.cleanupWindows()
+        self.stopTimer()
         event.accept()
+
+    def scanDesktops(self):
+        if self.secretBox.text().strip():
+            return
+
+        for screen in self.base.app.screens():
+            geom = screen.geometry()
+            screenshot = screen.grabWindow(0, geom.x(), geom.y(), geom.width(), geom.height())
+            secret = captureSecretFromImage(screenshot)
+
+            if secret:
+                self.__onScanComplete(secret)
+                break
 
     def cleanupWindows(self):
         if self.scanWindow:
