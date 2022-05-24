@@ -17,7 +17,6 @@ class MainWidget(TritonWidget):
     def __init__(self, base):
         TritonWidget.__init__(self, base)
         self.subWindow = None
-        self.closeEvent = self.widgetDeleted
 
         self.setWindowTitle('TritonAuth')
         self.setBackgroundColor(self, Qt.white)
@@ -91,14 +90,15 @@ class MainWidget(TritonWidget):
         for i in range(self.scrollLayout.count()):
             widget = self.scrollLayout.itemAt(i).widget()
 
-            if widget is None or isinstance(widget, EmptyTutorialWidget) or widget.name[0].lower() != letter:
+            if widget is None or isinstance(widget, EmptyTutorialWidget) or (not widget.name) or widget.name[0].lower() != letter:
                 continue
 
             self.scrollArea.verticalScrollBar().setValue(widget.geometry().top())
             break
 
-    def widgetDeleted(self, arg):
+    def closeEvent(self, event):
         self.closeSubWindow()
+        event.accept()
 
     def closeSubWindow(self):
         if self.subWindow:
@@ -118,21 +118,16 @@ class MainWidget(TritonWidget):
             widget = item.widget()
 
             if (not isinstance(widget, EmptyTutorialWidget)) and widget.account == account:
-                widget.close()
-                self.scrollLayout.removeItem(self.scrollLayout.itemAt(i))
+                self.scrollLayout.removeWidget(widget)
+                widget.deleteLater()
                 break
 
         if self.scrollLayout.count() == 0:
             self.scrollLayout.addWidget(EmptyTutorialWidget(self.base, self))
 
     def clearAccounts(self):
-        for i in range(self.scrollLayout.count()):
-            item = self.scrollLayout.itemAt(i)
-
-            if item.widget():
-                item.widget().close()
-
-            self.scrollLayout.removeItem(item)
+        for i in reversed(range(self.scrollLayout.count())):
+            self.scrollLayout.itemAt(i).widget().setParent(None)
 
     def createAccounts(self):
         self.clearAccounts()

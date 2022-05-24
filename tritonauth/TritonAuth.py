@@ -75,7 +75,7 @@ class TritonAuth(object):
         return self.data['accounts']
 
     def sortAccountsByName(self):
-        self.data['accounts'].sort(key=lambda acc: acc['name'])
+        self.data['accounts'].sort(key=lambda acc: acc['name'].lower())
         self.saveData()
 
     def addAccount(self, account):

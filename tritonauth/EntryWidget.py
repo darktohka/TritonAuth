@@ -22,8 +22,6 @@ class EntryWidget(TritonWidget):
         self.secretWidget = None
         self.iconWidget = None
 
-        self.closeEvent = self.widgetDeleted
-
         self.boxLayout = QHBoxLayout(self)
         self.boxLayout.setContentsMargins(0, 0, 0, 0)
 
@@ -86,13 +84,18 @@ class EntryWidget(TritonWidget):
         self.menu.addAction(self.iconAction)
         self.menu.addAction(self.showAction)
 
+        self.destroyed.connect(self.closeEvent)
+
     def getValue(self):
         return self.base.getAuthCode(self.account)
 
-    def widgetDeleted(self, *args):
+    def closeEvent(self, event=None):
         self.stopTimer()
         self.name = None
         self.account = None
+
+        if event:
+            event.accept()
 
     def buttonPressed(self, *args):
         if not self.timer:
@@ -143,7 +146,7 @@ class EntryWidget(TritonWidget):
 
         if not self.timer:
             self.timerProgress.setValue(100)
-            self.timer = QTimer()
+            self.timer = QTimer(self)
             self.timer.timeout.connect(self.updateProgress)
             self.timer.start(100)
 
