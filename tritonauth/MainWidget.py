@@ -10,7 +10,7 @@ from .AddSteamWidget import AddSteamWidget
 from .AboutWidget import AboutWidget
 from .ResetPasswordWidget import ResetPasswordWidget
 from . import Globals
-import base64, webbrowser, json
+import base64, json
 
 class MainWidget(TritonWidget):
 
@@ -44,14 +44,11 @@ class MainWidget(TritonWidget):
         self.manageMenu.addAction(self.andOTPAction)
 
         self.aboutMenu = self.menu.addMenu('Help')
-        self.documentationAction = QAction('Open Documentation...')
-        self.documentationAction.triggered.connect(self.openDocumentation)
         self.aboutProgramAction = QAction('About TritonAuth...')
         self.aboutProgramAction.triggered.connect(self.openAboutProgram)
         self.aboutQtAction = QAction('About Qt...')
         self.aboutQtAction.triggered.connect(lambda: QMessageBox.aboutQt(self))
 
-        self.aboutMenu.addAction(self.documentationAction)
         self.aboutMenu.addAction(self.aboutProgramAction)
         self.aboutMenu.addAction(self.aboutQtAction)
 
@@ -139,9 +136,6 @@ class MainWidget(TritonWidget):
 
         if not accounts:
             self.scrollLayout.addWidget(EmptyTutorialWidget(self.base, self))
-
-    def openDocumentation(self):
-        webbrowser.open(Globals.DocumentationURL)
 
     def openResetPassword(self):
         self.closeSubWindow()

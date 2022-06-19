@@ -10,5 +10,3 @@ DefaultErrorMessage = 'Unknown error'
 
 OTPAuth = 0
 SteamAuth = 1
-
-DocumentationURL = 'https://docs.google.com/document/d/1tksfNEn9IabzvFlGihqUcZVAub0rleGv7_Iuzt3dkss/edit'
