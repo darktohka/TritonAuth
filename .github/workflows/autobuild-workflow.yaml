@@ -1,19 +1,17 @@
 name: Autobuild
 
-on:
-  push:
-    branches: master
+on: [push, workflow_dispatch, repository_dispatch]
 
 jobs:
   build:
-    runs-on: windows-2022
+    runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup Visual Studio
         uses: ilammy/msvc-dev-cmd@v1
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: "3.x"
           architecture: "x64"
@@ -47,7 +45,7 @@ jobs:
         run: >
           ./build.bat
       - name: Upload installer
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: TritonAuth
           path: scripts/tritonauth_setup.exe

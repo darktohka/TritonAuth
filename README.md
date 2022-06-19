@@ -2,8 +2,6 @@
 
 A minimalistic rewrite of WinAuth entirely in Python.
 
-Written during FFT class in Sapientia.
-
 ## Getting Started
 
 It's easy to get started:

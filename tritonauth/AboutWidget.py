@@ -32,7 +32,7 @@ class AboutWidget(TritonWidget):
         self.subtitle = QLabel('Your one stop shop for two factor authentication')
         self.subtitle.setFont(font)
 
-        self.label = QLabel('Written by\nDerzsi Dániel and Sallai József\nSapientia, 2022')
+        self.label = QLabel('Written by\nDerzsi Dániel')
         self.label.setFont(QFont('Helvetica', 11))
         self.label.setAlignment(Qt.AlignCenter)
 
